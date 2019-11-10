@@ -1,0 +1,33 @@
+name: deploy djbelyak.ru to selectel storage
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@master
+      with:
+        submodules: true
+
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2.2.2
+      with:
+        hugo-version: '0.58.3'
+        extended: true
+
+    - name: Build
+      run: hugo --minify
+
+    - name: Deploy
+      uses: SamKirkland/FTP-Deploy-Action@2.0.0
+      env:
+        FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        FTP_USERNAME: ${{ secrets.FTP_USER }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        LOCAL_DIR: public
+        REMOTE_DIR: ${{ secrets.FTP_DIRECTORY }}
+        ARGS: --delete
