@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - master
-    - initial-site
 
 jobs:
   build-deploy:
@@ -32,5 +31,3 @@ jobs:
         LOCAL_DIR: public
         REMOTE_DIR: ${{ secrets.FTP_DIRECTORY }}
         ARGS: --delete
-
-        # lftp -e "set ftp:ssl-allow no; mirror -R --delete public $storage_dir; quit" -u $USERNAME,$USERKEY ftp.selcdn.ru

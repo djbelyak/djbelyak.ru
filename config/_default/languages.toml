@@ -7,13 +7,13 @@
   languageCode = "ru-ru"
   # contentDir = "content/en"  # Uncomment for multi-lingual sites, and move English content into `en` sub-folder.
   title="Иван Белявцев"
-  copyright = "&copy; 2017-2019 Иван Белявцев"
+  copyright = "&copy; 2017-{year} Иван Белявцев"
 
 [en]
   languageCode = "en-us"
   # contentDir = "content/en"  # Uncomment for multi-lingual sites, and move English content into `en` sub-folder.
   title="Ivan Belyavtsev"
-  copyright = "&copy; 2017-2019 Ivan Belyavtsev"
+  copyright = "&copy; 2017-{year} Ivan Belyavtsev"
   [[en.menu.main]]
     name = "Contact"
     url = "#contact"
