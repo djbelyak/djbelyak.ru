@@ -1,0 +1,9 @@
+User-Agent: *
+
+User-Agent: GoogleBot
+Allow: /*.pdf$
+
+
+User-Agent: YandexBot
+Host: djbelyak.ru
+Sitemap: https://djbelyak.ru/sitemap.xml

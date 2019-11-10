@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Иван Павлович Белявцев">
+  <title>Лекция №2. Платформа для разработчиков GitHub</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="lib/reveal.js/css/theme/lecture.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'lib/reveal.js/css/print/pdf.css' : 'lib/reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="lib/reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Лекция №2. Платформа для разработчиков GitHub</h1>
+  <p class="subtitle">Курс &quot;Инструменты проектного управления&quot;</p>
+  <p class="author">Иван Павлович Белявцев</p>
+  <p class="date">4.12.2018</p>
+</section>
+
+<section id="административная-часть" class="slide level2">
+<h2>Административная часть</h2>
+<ul>
+<li>Лекция №2: 4.12.2018</li>
+<li>Лекция №3: 18.12.2018</li>
+<li>Зачет: тест</li>
+</ul>
+</section>
+<section id="в-предидущих-сериях" class="slide level2">
+<h2>В предидущих сериях</h2>
+<ul>
+<li>Система контроля версий Git</li>
+<li>Локальная работа</li>
+<li>Тема коллаборации и бекапов не раскрыта</li>
+</ul>
+</section>
+<section id="что-такое-github" class="slide level2">
+<h2>Что такое Github</h2>
+<p><a href="https://github.com" class="uri">https://github.com</a></p>
+<ul>
+<li>Внешний сервер для репозитория</li>
+<li>Readme</li>
+<li>Wiki</li>
+<li>Issue tracker</li>
+<li>Pull requests</li>
+<li>Release storage</li>
+</ul>
+</section>
+<section id="рабочий-процесс" class="slide level2">
+<h2>Рабочий процесс</h2>
+<ol type="1">
+<li>Начало проекта</li>
+<li>Планирование проекта</li>
+<li>Работа над задачами</li>
+<li>Объединение рабочего кода</li>
+<li>Релиз</li>
+</ol>
+</section>
+<section id="начало-проекта" class="slide level2">
+<h2>Начало проекта</h2>
+</section>
+<section id="создание-проекта" class="slide level2">
+<h2>Создание проекта</h2>
+<p><a href="https://github.com/new" class="uri">https://github.com/new</a></p>
+<p><img src="img/new-repo.png" width="50%"></p>
+</section>
+<section id="пустой-проект" class="slide level2">
+<h2>Пустой проект</h2>
+<p><img src="img/empty-repo.png" height="50%"></p>
+</section>
+<section id="защита-ветки-master" class="slide level2">
+<h2>Защита ветки master</h2>
+<p><img src="img/protect-master.png" width="70%"></p>
+</section>
+<section id="клонирование-репозитория" class="slide level2">
+<h2>Клонирование репозитория</h2>
+<p><img src="img/clone.png"></p>
+<pre class="shell"><code>&gt; git clone https://github.com/djbelyak/the-best-project.git</code></pre>
+</section>
+<section id="планирование-проекта" class="slide level2">
+<h2>Планирование проекта</h2>
+</section>
+<section id="создание-issue" class="slide level2">
+<h2>Создание issue</h2>
+<p><img src="img/new-issue.png" height="50%"></p>
+</section>
+<section id="список-задач" class="slide level2">
+<h2>Список задач</h2>
+<p><img src="img/issue-list.png" height="50%"></p>
+</section>
+<section id="работа-над-задачей" class="slide level2">
+<h2>Работа над задачей</h2>
+</section>
+<section id="план-работы-над-задачей" class="slide level2">
+<h2>План работы над задачей</h2>
+<ol type="1">
+<li>Получить свежие изменения из origin репозитория</li>
+<li>Создать ветку для работы над задачей</li>
+<li>Делать коммиты и отправлять на origin, пока задача не будет решена</li>
+</ol>
+</section>
+<section id="получение-свежих-изменений" class="slide level2">
+<h2>Получение свежих изменений</h2>
+<pre class="shell"><code>&gt; git pull origin</code></pre>
+<p>или</p>
+<pre class="shell"><code>&gt; git fetch origin
+&gt; git checkout master</code></pre>
+</section>
+<section id="создать-ветку-для-работы-над-задачей" class="slide level2">
+<h2>Создать ветку для работы над задачей</h2>
+<p><img src="img/issue-list.png" height="50%"></p>
+<pre class="shell"><code>&gt; git checkout -b issue-1</code></pre>
+</section>
+<section id="делать-коммиты-и-отправлять-на-origin-пока-задача-не-будет-решена" class="slide level2">
+<h2>Делать коммиты и отправлять на origin, пока задача не будет решена</h2>
+<pre class="shell"><code>&gt; git add Readme.md
+&gt; git commit -m &quot;Написан простой Readme файл. Issue #1&quot;</code></pre>
+<p>Если ветки нет на github</p>
+<pre class="shell"><code>&gt; git push --set-upstream origin issue-1</code></pre>
+<p>Если ветка есть на github</p>
+<pre class="shell"><code>&gt; git push origin</code></pre>
+</section>
+<section id="объединение-рабочего-кода" class="slide level2">
+<h2>Объединение рабочего кода</h2>
+</section>
+<section id="pull-requests" class="slide level2">
+<h2>Pull requests</h2>
+<p><img src="img/pull-request.png" height="50%"></p>
+</section>
+<section id="сравнение-веток" class="slide level2">
+<h2>Сравнение веток</h2>
+<p><img src="img/comparing.png" height="50%"></p>
+</section>
+<section id="создание-pull-request" class="slide level2">
+<h2>Создание pull request</h2>
+<p><img src="img/create-pr.png" height="50%"></p>
+</section>
+<section id="слияние-веток---простой-случай" class="slide level2">
+<h2>Слияние веток - простой случай</h2>
+<p><img src="img/simple-merge.png" height="50%"></p>
+</section>
+<section id="слияние-веток---конфликт" class="slide level2">
+<h2>Слияние веток - конфликт</h2>
+<p><img src="img/simple-merge.png" height="50%"></p>
+</section>
+<section id="слияние-веток---разрешение-конфликта" class="slide level2">
+<h2>Слияние веток - разрешение конфликта</h2>
+<pre class="shell"><code>&gt; git checkout issue-2
+&gt; git pull origin master</code></pre>
+<p>Объединить файлы в которых произошел конфликт</p>
+<pre class="shell"><code>&gt; git add README.md
+&gt; git commit -m &quot;Исправлен merge conflict #4&quot;
+&gt; git push origin issue-2</code></pre>
+</section>
+<section id="что-нужно-проверить-после-merge" class="slide level2">
+<h2>Что нужно проверить после merge</h2>
+<ol type="1">
+<li>Решаемая задача закрыта</li>
+<li>Рабочий репозиторий переключен на ветку <code>master</code></li>
+</ol>
+<pre class="shell"><code>&gt; git checkout master
+&gt; git pull</code></pre>
+</section>
+<section id="релиз" class="slide level2">
+<h2>Релиз</h2>
+</section>
+<section id="создать-tag" class="slide level2">
+<h2>Создать tag</h2>
+<pre class="shell"><code>&gt; git checkout master
+&gt; git tag -a v.1.0 -m &quot;Версия 1.0&quot;
+&gt; git push --tags</code></pre>
+</section>
+<section id="создать-описание-релиза" class="slide level2">
+<h2>Создать описание релиза</h2>
+<p><img src="img/release-description.png" width="50%"></p>
+</section>
+<section id="триумф" class="slide level2">
+<h2>Триумф</h2>
+<p><img src="img/triumph.png" height="50%"></p>
+</section>
+<section id="спасибо-за-внимание" class="slide level2">
+<h2>Спасибо за внимание!</h2>
+</section>
+    </div>
+  </div>
+
+  <script src="lib/reveal.js/lib/js/head.min.js"></script>
+  <script src="lib/reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'lib/reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'lib/reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

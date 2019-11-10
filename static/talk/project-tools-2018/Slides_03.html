@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Иван Павлович Белявцев">
+  <title>Лекция №3. Непрерывная интеграция</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="lib/reveal.js/css/theme/lecture.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'lib/reveal.js/css/print/pdf.css' : 'lib/reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="lib/reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Лекция №3. Непрерывная интеграция</h1>
+  <p class="subtitle">Курс &quot;Инструменты проектного управления&quot;</p>
+  <p class="author">Иван Павлович Белявцев</p>
+  <p class="date">18.12.2018</p>
+</section>
+
+<section id="в-предыдущих-сериях" class="slide level2">
+<h2>В предыдущих сериях</h2>
+<ul>
+<li>Познакомились с локальной работой в Git</li>
+<li>Познакомились с распределенной работой в Git и GitHub</li>
+<li>Узнали, что каждый push можно проверить автоматически</li>
+</ul>
+</section>
+<section id="непрерывная-интеграция" class="slide level2">
+<h2>Непрерывная интеграция</h2>
+<ul>
+<li>Получить код при каждом push в origin</li>
+<li>Собрать проект</li>
+<li>Выполнить тесты</li>
+<li>Выполнить проверки (стиль кода, возможные ошибки)</li>
+<li>Выложить результаты в специальное место</li>
+<li>Сообщить о статусе всех работ</li>
+</ul>
+</section>
+<section id="по-для-непрерывной-интеграции" class="slide level2">
+<h2>ПО для непрерывной интеграции</h2>
+<ul>
+<li>Jenkins</li>
+<li>TeamCity</li>
+<li><strong>Travis</strong></li>
+<li>Gitlab CI</li>
+<li>DroneCI</li>
+</ul>
+</section>
+<section id="демонстрационный-проект" class="slide level2">
+<h2>Демонстрационный проект</h2>
+<p><a href="https://github.com/djbelyak/cpp-ci-demo" class="uri">https://github.com/djbelyak/cpp-ci-demo</a></p>
+<ol type="1">
+<li>Сделать Hello world приложение на C++</li>
+<li>Сборка приложения в Travis</li>
+<li>Выделить функцию для формирования строки</li>
+<li>Написать тесты для функции формирования строки</li>
+<li>Опубликовать результаты</li>
+</ol>
+</section>
+<section id="hello-world-приложение-на-c" class="slide level2">
+<h2>Hello world приложение на C++</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span>
+<span class="pp">#include </span><span class="im">&lt;string&gt;</span>
+
+<span class="dt">int</span> main(<span class="dt">char</span> argv, <span class="at">const</span> <span class="dt">char</span>** argc)
+{
+    <span class="bu">std::</span>string sName;
+    <span class="bu">std::</span>cout &lt;&lt; <span class="st">&quot;What is your name?&quot;</span> &lt;&lt; <span class="bu">std::</span>endl;
+    <span class="bu">std::</span>cin &gt;&gt; sName;
+    <span class="bu">std::</span>cout &lt;&lt; <span class="st">&quot;Hello, &quot;</span> &lt;&lt; sName &lt;&lt; <span class="st">&quot;!&quot;</span> &lt;&lt; <span class="bu">std::</span>endl;
+    <span class="cf">return</span> <span class="dv">0</span>;
+}</code></pre></div>
+<p><code>cpp-ci-demo.cpp</code></p>
+</section>
+<section id="как-работает" class="slide level2">
+<h2>Как работает</h2>
+<p><img src="img/cpp-result.png" width="70%"></p>
+</section>
+<section id="что-должно-быть-в-.gitignore" class="slide level2">
+<h2>Что должно быть в .gitignore?</h2>
+</section>
+<section id="gitignore-для-c-visual-studio" class="slide level2">
+<h2>Gitignore для C++ (Visual Studio)</h2>
+<pre class="gitignore"><code>...
+# Visual Studio
+.vs/
+Debug/
+Release/
+x64/
+*.user
+</code></pre>
+<p><code>.gitignore</code></p>
+</section>
+<section id="начало-работы-с-travis" class="slide level2">
+<h2>Начало работы с Travis</h2>
+<ol type="1">
+<li>Зайти на <a href="travis-ci.com" class="uri">travis-ci.com</a> и выбрать Sign up with GitHub.</li>
+<li>Принять авторизацию Travis CI для github.</li>
+<li>Нажать кнопку <code>Activate</code> и выбрать репозитории.</li>
+<li>Добавить файл <code>travis.yml</code> в корень репозитория.</li>
+</ol>
+</section>
+<section id="настройка-сборки-приложения-в-travis" class="slide level2">
+<h2>Настройка сборки приложения в Travis</h2>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">language:</span><span class="at"> cpp</span>
+<span class="fu">os:</span><span class="at"> windows</span>
+<span class="fu">env:</span>
+ <span class="kw">-</span> <span class="fu">MSBUILD_PATH=&quot;c:</span><span class="at">\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin&quot;</span>
+<span class="fu">before_script:</span>
+ <span class="kw">-</span> choco install windows-sdk-10.0 -y --version 10.0.26624
+<span class="fu">script:</span>
+ <span class="kw">-</span> <span class="fu">export PATH=$MSBUILD_PATH:</span><span class="at">$PATH</span>
+ <span class="kw">-</span> <span class="fu">msbuild.exe ./cpp-ci-demo.vcxproj //p:</span><span class="at">Configuration=release //p:Platform=x86 //m</span>
+ <span class="kw">-</span> <span class="fu">msbuild.exe ./cpp-ci-demo.vcxproj //p:</span><span class="at">Configuration=release //p:Platform=x64 //m</span></code></pre></div>
+<p><code>.travis.yml</code></p>
+</section>
+<section id="результат-сборки" class="slide level2">
+<h2>Результат сборки</h2>
+<p><img src="img/travis-ci.png" width="70%"></p>
+<p><a href="https://travis-ci.com/djbelyak/cpp-ci-demo" class="uri">https://travis-ci.com/djbelyak/cpp-ci-demo</a></p>
+</section>
+<section id="pull-request-с-рабочим-ci" class="slide level2">
+<h2>Pull request с рабочим CI</h2>
+<p><img src="img/ci-merge.png" width="50%"></p>
+</section>
+<section id="рефакторинг" class="slide level2">
+<h2>Рефакторинг</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&quot;greetings.h&quot;</span>
+
+<span class="pp">#include </span><span class="im">&lt;iostream&gt;</span>
+
+
+<span class="dt">int</span> main(<span class="dt">char</span> argv, <span class="at">const</span> <span class="dt">char</span>** argc)
+{
+    <span class="bu">std::</span>string sName;
+    <span class="bu">std::</span>cout &lt;&lt; <span class="st">&quot;What is your name?&quot;</span> &lt;&lt; <span class="bu">std::</span>endl;
+    <span class="bu">std::</span>cin &gt;&gt; sName;
+    <span class="bu">std::</span>cout &lt;&lt; greetings(sName) &lt;&lt; <span class="bu">std::</span>endl;
+    <span class="cf">return</span> <span class="dv">0</span>;
+}</code></pre></div>
+<p><code>cpp-ci-demo.cpp</code></p>
+</section>
+<section id="рефакторинг-1" class="slide level2">
+<h2>Рефакторинг</h2>
+<div class="sourceCode"><pre class="sourceCode h"><code class="sourceCode c"><span class="pp">#pragma once</span>
+
+<span class="pp">#include </span><span class="im">&lt;string&gt;</span>
+
+<span class="kw">extern</span> std::string greetings(std::string in_sName);</code></pre></div>
+<p><code>greetings.h</code></p>
+</section>
+<section id="рефакторинг-2" class="slide level2">
+<h2>Рефакторинг</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&quot;greetings.h&quot;</span>
+
+
+<span class="bu">std::</span>string greetings(<span class="bu">std::</span>string in_sName)
+{
+    <span class="bu">std::</span>string sResult = <span class="st">&quot;Hello, &quot;</span>;
+    sResult += in_sName;
+    sResult = <span class="st">&quot;!&quot;</span>;
+    <span class="cf">return</span> sResult;
+}</code></pre></div>
+<p><code>greetings.cpp</code></p>
+</section>
+<section id="результаты-ci" class="slide level2">
+<h2>Результаты CI</h2>
+<p><img src="img/ci-after-refactoring.png" width="70%"></p>
+<p><a href="https://travis-ci.com/djbelyak/cpp-ci-demo/builds/94679404" class="uri">https://travis-ci.com/djbelyak/cpp-ci-demo/builds/94679404</a></p>
+</section>
+<section id="публикация-результатов" class="slide level2">
+<h2>Публикация результатов</h2>
+</section>
+<section id="настройка-ключей-доступа" class="slide level2">
+<h2>Настройка ключей доступа</h2>
+<p><a href="https://github.com/settings/tokens" class="uri">https://github.com/settings/tokens</a></p>
+<p><img src="img/pat.png" width="70%"></p>
+</section>
+<section id="настройка-переменных-окружения" class="slide level2">
+<h2>Настройка переменных окружения</h2>
+<p><img src="img/travis-settings.png" width="40%"></p>
+</section>
+<section id="конфигурация-travis-ci" class="slide level2">
+<h2>Конфигурация Travis CI</h2>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="co">#   ...</span>
+
+<span class="fu">deploy:</span>
+  <span class="fu">provider:</span><span class="at"> releases</span>
+  <span class="fu">api_key:</span>
+    <span class="fu">secure:</span><span class="at"> </span><span class="st">&quot;$GITHUB_OAUTH_TOKEN&quot;</span>
+  <span class="fu">file:</span>
+    <span class="kw">-</span> <span class="st">&quot;release/cpp-ci-demo.exe&quot;</span>
+  <span class="fu">skip_cleanup:</span><span class="at"> true</span>
+  <span class="fu">on:</span>
+    <span class="fu">tags:</span><span class="at"> true</span></code></pre></div>
+<p><code>.travis.yml</code></p>
+</section>
+<section id="релиз" class="slide level2">
+<h2>Релиз</h2>
+<pre class="shell"><code>&gt; git checkout master
+&gt; git tag -a v.1.0 -m &quot;Версия 1.0&quot;
+&gt; git push --tags</code></pre>
+</section>
+<section id="сборка-релиза" class="slide level2">
+<h2>Сборка релиза</h2>
+<p><img src="img/travis-release.png" width="70%"></p>
+<p><a href="https://travis-ci.com/djbelyak/cpp-ci-demo/builds/95010404" class="uri">https://travis-ci.com/djbelyak/cpp-ci-demo/builds/95010404</a></p>
+</section>
+<section id="после-сборки" class="slide level2">
+<h2>После сборки</h2>
+<p><img src="img/release-1.0.png" width="70%"></p>
+</section>
+<section id="фактический-результат-работы" class="slide level2">
+<h2>Фактический результат работы</h2>
+<p><img src="img/after-refactoring.png" width="70%"></p>
+</section>
+<section id="где-ошибка" class="slide level2">
+<h2>Где ошибка?</h2>
+</section>
+<section id="где-ошибка-1" class="slide level2">
+<h2>Где ошибка?</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&quot;greetings.h&quot;</span>
+
+
+<span class="bu">std::</span>string greetings(<span class="bu">std::</span>string in_sName)
+{
+    <span class="bu">std::</span>string sResult = <span class="st">&quot;Hello, &quot;</span>;
+    sResult += in_sName;
+    sResult = <span class="st">&quot;!&quot;</span>;
+    <span class="cf">return</span> sResult;
+}</code></pre></div>
+<p><code>greetings.cpp</code></p>
+</section>
+<section id="багфикс-в-следующей-версии" class="slide level2">
+<h2>Багфикс в следующей версии</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&quot;greetings.h&quot;</span>
+
+
+<span class="bu">std::</span>string greetings(<span class="bu">std::</span>string in_sName)
+{
+    <span class="bu">std::</span>string sResult = <span class="st">&quot;Hello, &quot;</span>;
+    sResult += in_sName;
+    sResult += <span class="st">&quot;!&quot;</span>;
+    <span class="cf">return</span> sResult;
+}</code></pre></div>
+<p><code>greetings.cpp</code></p>
+</section>
+<section id="сборка-релиза-1" class="slide level2">
+<h2>Сборка релиза</h2>
+<p><img src="img/latest-release.png" width="70%"></p>
+<p><a href="https://travis-ci.com/djbelyak/cpp-ci-demo/builds/95027433" class="uri">https://travis-ci.com/djbelyak/cpp-ci-demo/builds/95027433</a></p>
+</section>
+<section id="после-сборки-1" class="slide level2">
+<h2>После сборки</h2>
+<p><img src="img/latest-release-2.png" width="70%"></p>
+</section>
+<section id="фактический-результат-работы-1" class="slide level2">
+<h2>Фактический результат работы</h2>
+<p><img src="img/cpp-result.png" width="70%"></p>
+</section>
+<section id="спасибо-за-внимание" class="slide level2">
+<h2>Спасибо за внимание!</h2>
+</section>
+<section id="тест" class="slide level2">
+<h2>Тест</h2>
+<p><a href="https://ru.surveymonkey.com/r/55XZNNY" class="uri">https://ru.surveymonkey.com/r/55XZNNY</a></p>
+<figure>
+<img src="img/QR_code_55XZNNY.png" />
+</figure>
+</section>
+    </div>
+  </div>
+
+  <script src="lib/reveal.js/lib/js/head.min.js"></script>
+  <script src="lib/reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'lib/reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'lib/reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

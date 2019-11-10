@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Иван Павлович Белявцев">
+  <title>Лекция №1. Система контроля версий Git</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="lib/reveal.js/css/theme/lecture.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'lib/reveal.js/css/print/pdf.css' : 'lib/reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="lib/reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Лекция №1. Система контроля версий Git</h1>
+  <p class="subtitle">Курс &quot;Инструменты проектного управления&quot;</p>
+  <p class="author">Иван Павлович Белявцев</p>
+  <p class="date">23.10.2018</p>
+</section>
+
+<section id="слайды-лекции" class="slide level2">
+<h2>Слайды лекции</h2>
+<!--![](img/qr_slides.png)-->
+<p><a href="https://djbelyak.ru/talk/project-tools-2018/Slides_01.html" class="uri">https://djbelyak.ru/talk/project-tools-2018/Slides_01.html</a></p>
+</section>
+<section id="о-преподавателе" class="slide level2">
+<h2>О преподавателе</h2>
+<p><img src="img/avatar.jpg" width="150"></p>
+<p><strong>Белявцев Иван Павлович</strong></p>
+<ul>
+<li>Квалификация: преподаватель-исследователь направлению &quot;Информатика и вычислительная техника&quot;</li>
+<li>Инструктор вычислительной практики (3 курс)</li>
+</ul>
+</section>
+<section id="контакты" class="slide level2">
+<h2>Контакты</h2>
+<figure>
+<img src="img/qr.png" />
+</figure>
+<p><a href="https://djbelyak.ru/">djbelyak.ru</a></p>
+</section>
+<section id="дисклеймер" class="slide level2">
+<h2>Дисклеймер</h2>
+<p>Курс ранее не читался</p>
+<p>Возможны неточности и ошибки</p>
+<p>Внимательность и обратная связь категорически приветствуется!</p>
+</section>
+<section id="о-курсе" class="slide level2">
+<h2>О курсе</h2>
+<p>Официальное название: &quot;<strong>Основы</strong> проектного управления&quot;</p>
+<p>Фактическое название: &quot;<strong>Инструменты</strong> проектного управления&quot;</p>
+</section>
+<section id="темы-курса" class="slide level2">
+<h2>Темы курса</h2>
+<ol type="1">
+<li>Система контроля версий Git</li>
+<li>Платформа для разработчиков GitHub</li>
+<li>Непрерывная интеграция и непрерывное развертывание</li>
+</ol>
+</section>
+<section id="вопросы" class="slide level2">
+<h2>Вопросы</h2>
+<p>Появился вопрос - сразу задавайте!</p>
+</section>
+<section id="для-чего-нужно-хранить-версии" class="slide level2">
+<h2>Для чего нужно хранить версии?</h2>
+</section>
+<section id="для-чего-нужно-хранить-версии-1" class="slide level2">
+<h2>Для чего нужно хранить версии?</h2>
+<ul>
+<li>Вернуться к предыдущему варианту</li>
+<li>Совместно работать над проектом</li>
+<li>Резервное копирование</li>
+</ul>
+</section>
+<section id="как-бы-вы-решали-эту-задачу" class="slide level2">
+<h2>Как бы вы решали эту задачу?</h2>
+</section>
+<section id="решение-от-линуса-торвальдса" class="slide level2">
+<h2>Решение от Линуса Торвальдса</h2>
+<p>Система контроля версий Git</p>
+<figure>
+<img src="img/gitlogo.png" />
+</figure>
+<p><a href="https://git-scm.com">Git-scm.com</a></p>
+</section>
+<section id="начало-работы" class="slide level2">
+<h2>Начало работы</h2>
+<p>Инициализация репозитория</p>
+<pre class="shell"><code>mkdir test-repo
+cd test-repo
+git init</code></pre>
+</section>
+<section id="настройка-автора-изменений" class="slide level2">
+<h2>Настройка автора изменений</h2>
+<pre class="shell"><code>git config --global user.name &quot;Ivan Belyavtsev&quot;
+git config --global user.email djbelyak@gmail.com</code></pre>
+</section>
+<section id="работа-над-текущими-изменениями-шаг-1" class="slide level2">
+<h2>Работа над текущими изменениями (шаг 1)</h2>
+<p>Сделать изменение:</p>
+<pre class="shell"><code>$ git status
+On branch master
+Changes not staged for commit:
+  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)
+  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)
+
+        modified:   Readme.md
+
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</code></pre>
+</section>
+<section id="работа-над-текущими-изменениями-шаг-2" class="slide level2">
+<h2>Работа над текущими изменениями (шаг 2)</h2>
+<p>Добавление файлов в индекс репозитория</p>
+<pre class="shell"><code>$ git add Readme.md
+$ git status
+On branch master
+Changes to be committed:
+  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)
+
+        modified:   Readme.md</code></pre>
+</section>
+<section id="работа-над-текущими-изменениями-шаг-3" class="slide level2">
+<h2>Работа над текущими изменениями (шаг 3)</h2>
+<p>Фиксация изменения</p>
+<pre class="shell"><code>$ git commit -m &quot;Added important information&quot;
+[master 31f9a86] Added important information
+ Committer: Ivan Belyavtsev &lt;djbelyak@gmail.com&gt;
+
+
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+</code></pre>
+</section>
+<section id="из-чего-состоит-коммит" class="slide level2">
+<h2>Из чего состоит коммит</h2>
+<pre class="shell"><code>$ git show HEAD
+commit 31f9a868ae30b289034d1ddff7379775ddd7b810 (HEAD -&gt; master)
+Author: Ivan Belyavtsev &lt;djbelyak@gmail.com&gt;
+Date:   Mon Oct 22 20:15:07 2018 +0300
+
+    Add important information
+
+diff --git a/Readme.md b/Readme.md
+index e007a9a..55627b8 100644
+--- a/Readme.md
++++ b/Readme.md
+@@ -1 +1,3 @@
+-# Прочти меня
+\ No newline at end of file
++# Прочти меня
++
++Тут важная информация
+\ No newline at end of file
+</code></pre>
+</section>
+<section id="как-посмотреть-историю-коммитов" class="slide level2">
+<h2>Как посмотреть историю коммитов</h2>
+<pre class="shell"><code>$ git log
+commit 31f9a868ae30b289034d1ddff7379775ddd7b810 (HEAD -&gt; master)
+Author: Ivan Belyavtsev &lt;djbelyak@gmail.com&gt;
+Date:   Mon Oct 22 20:15:07 2018 +0300
+
+    Add important information
+
+commit 953d1e02239a8012607c2c89d0c61932424e6a95
+Author: Ivan Belyavtsev &lt;djbelyak@gmail.com&gt;
+Date:   Mon Oct 22 19:35:45 2018 +0300
+
+    Init commit</code></pre>
+</section>
+<section id="вернуть-рабочую-копию-к-определенному-состоянию" class="slide level2">
+<h2>Вернуть рабочую копию к определенному состоянию</h2>
+<pre class="shell"><code>$ git checkout HEAD~1
+Note: checking out &#39;HEAD~1&#39;.
+
+You are in &#39;detached HEAD&#39; state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b &lt;new-branch-name&gt;
+
+HEAD is now at 953d1e0 Init commit
+</code></pre>
+</section>
+<section id="вернуться-к-крайнему-состоянию" class="slide level2">
+<h2>Вернуться к крайнему состоянию</h2>
+<pre class="shell"><code>$ git checkout master
+Previous HEAD position was 953d1e0 Init commit
+Switched to branch &#39;master&#39;</code></pre>
+</section>
+<section id="что-будет-если-сделать-новый-коммит-в-detached-head" class="slide level2">
+<h2>Что будет, если сделать новый коммит в detached HEAD?</h2>
+</section>
+<section id="решение---сделать-ветку" class="slide level2">
+<h2>Решение - сделать ветку</h2>
+<pre class="shell"><code>git checkout -b issue-1
+Switched to a new branch &#39;issue-1&#39;
+</code></pre>
+</section>
+<section id="граф-коммитов" class="slide level2">
+<h2>Граф коммитов</h2>
+<pre class="shell"><code>$ git log --graph --oneline --all
+* a2ee9cb (issue-1) Breaking changes
+| * c782f07 (HEAD -&gt; master) Fixed typo
+| * 31f9a86 Add important information
+|/
+* 953d1e0 Init commit
+</code></pre>
+</section>
+<section id="слияние-веток" class="slide level2">
+<h2>Слияние веток</h2>
+<pre class="shell"><code>$ git checkout master
+Switched to branch &#39;master&#39;
+
+$ git merge issue-1
+Auto-merging Readme.md
+CONFLICT (content): Merge conflict in Readme.md
+Automatic merge failed; fix conflicts and then commit the result.
+</code></pre>
+</section>
+<section id="разрешение-конфликтов" class="slide level2">
+<h2>Разрешение конфликтов</h2>
+<ol type="1">
+<li>Исправить файл вручную</li>
+<li><p>Добавить исправленные файлы в рабочую копию</p>
+<pre class="shell"><code>$ git add Readme.md</code></pre></li>
+<li><p>Сделать коммит</p>
+<pre class="shell"><code>$ git commit -m &quot;Fixed conflicts&quot;
+[master ce6210f] Fixed conflicts
+ Committer: Ivan Belyavtsev &lt;djbelyak@gmail.com&gt;</code></pre></li>
+</ol>
+</section>
+<section id="после-разрешения-конфликта" class="slide level2">
+<h2>После разрешения конфликта</h2>
+<pre class="shell"><code>$ git log --graph --oneline --all
+*   ce6210f (HEAD -&gt; master) Fixed conflicts
+|\
+| * a2ee9cb (issue-1) Breaking changes
+* | c782f07 Fixed typo
+* | 31f9a86 Add important information
+|/
+* 953d1e0 Init commit
+</code></pre>
+</section>
+<section id="пометить-коммит" class="slide level2">
+<h2>Пометить коммит</h2>
+<pre class="shell"><code>$ git tag -a -m &quot;Alpha version&quot; v0.1</code></pre>
+</section>
+<section id="список-меток" class="slide level2">
+<h2>Список меток</h2>
+<pre class="shell"><code>$ git tag -l
+v0.1
+v1.0
+</code></pre>
+</section>
+<section id="спасибо-за-внимание" class="slide level2">
+<h2>Спасибо за внимание!</h2>
+</section>
+    </div>
+  </div>
+
+  <script src="lib/reveal.js/lib/js/head.min.js"></script>
+  <script src="lib/reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'lib/reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'lib/reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
