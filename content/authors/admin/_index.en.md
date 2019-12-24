@@ -17,7 +17,7 @@ organizations:
   url: https://www.nvidia.com/ru-ru/
 
 # Short bio (displayed in user profile at end of posts)
-bio: Developer technology engineer.
+# bio: Developer technology engineer.
 
 interests:
 - Artificial neuron networks

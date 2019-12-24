@@ -7,7 +7,13 @@ abstract = "Непрерывная интеграция"
 abstract_short = ""
 event = "Курс \"Инструменты проектного управления\""
 # event_url = "http://magistr.mephi.ru/school/"
-location = "ИАТЭ НИЯУ МИФИ, Обнинск, 2-521"
+location = "ИАТЭ НИЯУ МИФИ, ауд. 2-521"
+[address]
+  street = "Студенческий городок, 1"
+  city = "Обнинск"
+  region = "Калужская обл."
+  postcode = "249034"
+  country = "Россия"
 
 selected = false
 math = false

@@ -5,12 +5,14 @@
 # Configure the English version of the site.
 [ru]
   languageCode = "ru-ru"
+  address_format = "ru-ru"
   # contentDir = "content/en"  # Uncomment for multi-lingual sites, and move English content into `en` sub-folder.
   title="Иван Белявцев"
   copyright = "&copy; 2017-{year} Иван Белявцев"
 
 [en]
   languageCode = "en-us"
+  address_format = "en-us"
   # contentDir = "content/en"  # Uncomment for multi-lingual sites, and move English content into `en` sub-folder.
   title="Ivan Belyavtsev"
   copyright = "&copy; 2017-{year} Ivan Belyavtsev"

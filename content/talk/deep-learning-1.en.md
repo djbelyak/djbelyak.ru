@@ -7,7 +7,14 @@ abstract = "The first part of deep learning for image processing course (in Russ
 abstract_short = ""
 event = "Deep learning for image processing course"
 # event_url = "http://magistr.mephi.ru/school/"
-location = "OINPE, Obninsk, 2-505а"
+location = "OINPE, 2-505а"
+[address]
+  street = "Studgorodok st., 1"
+  city = "Obninsk"
+  region = "Kaluga rg."
+  postcode = "249034"
+  country = "Russia"
+
 
 selected = false
 math = false

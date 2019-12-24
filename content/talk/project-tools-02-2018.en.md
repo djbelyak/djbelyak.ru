@@ -7,7 +7,13 @@ abstract = "Github - project hosting for developers"
 abstract_short = ""
 event = "Course \"Project management tools\""
 # event_url = "http://magistr.mephi.ru/school/"
-location = "OINPE, Obninsk, 2-521"
+location = "OINPE, 2-521"
+[address]
+  street = "Studgorodok st., 1"
+  city = "Obninsk"
+  region = "Kaluga rg."
+  postcode = "249034"
+  country = "Russia"
 
 selected = false
 math = false

@@ -7,7 +7,12 @@ abstract = ""
 abstract_short = ""
 event = "VI Международная молодежная научная школа-конференция"
 event_url = "http://magistr.mephi.ru/school/"
-location = "НИЯУ МИФИ, Москва"
+location = "НИЯУ МИФИ"
+[address]
+  street = "Каширское ш., 31"
+  city = "Москва"
+  postcode = "115409"
+  country = "Россия"
 
 selected = true
 math = true

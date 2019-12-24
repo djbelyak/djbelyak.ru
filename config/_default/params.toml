@@ -249,3 +249,8 @@ plugins_js  = []
 [marketing]
   google_analytics = "UA-71522545-3"
   google_tag_manager = ""
+
+[address_formats]
+  en-us = {order = ['street', 'city', 'region', 'postcode'], delimiters = [', ', ', ', ' ', '']}
+  ru-ru = {order = ['region', 'city', 'street'], delimiters = [', ', ', ', '']}
+
