@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture #7: Texturing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reset.css">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/lectures.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture #7: Texturing</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">25.01.2020</p>
+</section>
+
+<section id="texture-coordinates" class="slide level2">
+<h2>Texture coordinates</h2>
+<p><img data-src="img/uvcoordinates.png" alt="From: https://docs.microsoft.com/en-us/windows/win32/direct3d9/texture-coordinates" /> <span class="citation" data-cites="texture_coordinates">[1]</span></p>
+</section>
+<section id="texture-coordinates-in-wavefron-obj" class="slide level2">
+<h2>Texture coordinates in Wavefron OBJ</h2>
+<ul>
+<li><code>vt</code> - texture coordinates</li>
+<li>per vertex data <span class="citation" data-cites="fileformat_info_obj">[2]</span></li>
+</ul>
+</section>
+<section id="texel-to-screen-space-mapping" class="slide level2">
+<h2>Texel to screen space mapping</h2>
+<p>Use barycentric coordinates</p>
+<p><span class="math display">\[P(tex) = uA(tex)+vB(tex)+wC(tex)\]</span> <span class="citation" data-cites="moretonhenrystamnick2018">[3]</span></p>
+</section>
+<section id="texturing-experiment" class="slide level2">
+<h2>“Texturing” experiment</h2>
+<h3 id="deduction-phase">Deduction phase</h3>
+<ul>
+<li>How to use barycentrics to find texture coordinates</li>
+<li>What about performance?</li>
+</ul>
+</section>
+<section id="texturing-experiment-1" class="slide level2">
+<h2>“Texturing” experiment</h2>
+<h3 id="experiment">Experiment</h3>
+<p>Let’s implement it together</p>
+</section>
+<section id="texturing-experiment-2" class="slide level2">
+<h2>“Texturing” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references" role="doc-bibliography">
+<div id="ref-texture_coordinates">
+<p>1. Satran M. Texture coordinates (direct3d 9) [Electronic resource]. 2018. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d9/texture-coordinates">https://docs.microsoft.com/en-us/windows/win32/direct3d9/texture-coordinates</a>.</p>
+</div>
+<div id="ref-fileformat_info_obj">
+<p>2. Wavefront obj file format summary // FileFormat.Info.</p>
+</div>
+<div id="ref-moretonhenrystamnick2018">
+<p>3. Moreton H., Stam N. Turing texture space shading [Electronic resource]. 2018. URL: <a href="https://devblogs.nvidia.com/texture-space-shading/">https://devblogs.nvidia.com/texture-space-shading/</a>.</p>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/math/math.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

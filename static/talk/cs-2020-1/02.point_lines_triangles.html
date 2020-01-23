@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture #2: Points. Lines. Triangles</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reset.css">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/lectures.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture #2: Points. Lines. Triangles</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">24.01.2020</p>
+</section>
+
+<section id="rasteriztion-theory" class="slide level2">
+<h2>Rasteriztion theory</h2>
+<p>It’s possible construct any image using the next operation:</p>
+<ul>
+<li>draw a point</li>
+<li>draw a line</li>
+<li>draw a triangle</li>
+</ul>
+</section>
+<section id="color-space-experiment" class="slide level2">
+<h2>“Color space” experiment</h2>
+<h3 id="deduction-phase">Deduction phase</h3>
+<ul>
+<li>Pixel is 3 colored light sources</li>
+<li>Does variation of pixel give a different color?</li>
+<li>What about performance?</li>
+</ul>
+</section>
+<section id="color-space-experiment-1" class="slide level2">
+<h2>“Color space” experiment</h2>
+<h3 id="experiment">Experiment</h3>
+<p>Let’s implement it together</p>
+</section>
+<section id="color-space-experiment-2" class="slide level2">
+<h2>“Color space” experiment</h2>
+<h3 id="reference">Reference</h3>
+<figure>
+<img data-src="img/color_space.png" alt="" /><figcaption>From: <a href="https://github.com/djbelyak/cg-template/blob/master/references/color_space.png" class="uri">https://github.com/djbelyak/cg-template/blob/master/references/color_space.png</a></figcaption>
+</figure>
+</section>
+<section id="color-space-experiment-3" class="slide level2">
+<h2>“Color space” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+<ul>
+<li>We’re able to draw any color from a gamut using variation of intensity of red, green, and blue colors</li>
+</ul>
+</section>
+<section id="simple-line-equation" class="slide level2">
+<h2>Simple line equation</h2>
+<p><span class="math display">\[y = ax+b\]</span></p>
+</section>
+<section id="equation-from-2-points" class="slide level2">
+<h2>Equation from 2 points</h2>
+<p><span class="math display">\[a = \frac{y_1 - y_2}{x_1 - x_2}\]</span> <span class="math display">\[b = y_1 - x_1\frac{y_1 - y_2}{x_1 - x_2}\]</span></p>
+<p><span class="math display">\[y= y_1 + \frac{y_1 - y_2}{x_1 - x_2}(x - x_1)\]</span></p>
+</section>
+<section id="naïves-draw-line-algorithm" class="slide level2">
+<h2>Naïve’s draw line algorithm</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>slope <span class="op">=</span> (y_begin <span class="op">-</span> y_end)<span class="op">/</span>(x_begin <span class="op">-</span> x_end)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(x_begin, x_end):</span>
+<span id="cb1-3"><a href="#cb1-3"></a>    y <span class="op">=</span> y_begin <span class="op">+</span> slope<span class="op">*</span>(x <span class="op">-</span> x_begin)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    draw_point(x, <span class="bu">round</span>(y))</span></code></pre></div>
+<p><span class="citation" data-cites="Shirley_book">[1]</span></p>
+</section>
+<section id="draw-line-experiment" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="deduction-phase-1">Deduction phase</h3>
+<ul>
+<li>Line could be represent as set of pixels</li>
+<li>To draw line we can use Naïve’s draw line algorithm</li>
+<li>What about performance?</li>
+</ul>
+</section>
+<section id="draw-line-experiment-1" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="experiment-1">Experiment</h3>
+<p>Let’s implement it together</p>
+</section>
+<section id="draw-line-experiment-2" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="reference-1">Reference</h3>
+<figure>
+<img data-src="img/draw_line.png" alt="" /><figcaption>From: <a href="https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png" class="uri">https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png</a></figcaption>
+</figure>
+</section>
+<section id="draw-line-experiment-3" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="what-is-the-new-knowledge-1">What is the new knowledge?</h3>
+<ul>
+<li>Naïve’s draw line algorithm has an issue with zero-division</li>
+<li>Naïve’s draw line algorithm has an issue with empty spaces</li>
+<li>Naïve’s draw line algorithm doesn’t fit to draw lines</li>
+</ul>
+</section>
+<section id="bresenhams-draw-line-algorithm" class="slide level2">
+<h2>Bresenham’s draw line algorithm</h2>
+<h3 id="improvements-of-naïves-draw-line-algorithm">Improvements of Naïve’s draw line algorithm</h3>
+<ul>
+<li>Mirror of the best range</li>
+<li>Don’t calculate a line function</li>
+<li>Use error calculation to increment y value</li>
+</ul>
+<p><span class="citation" data-cites="Shirley_book">[1]</span></p>
+</section>
+<section id="draw-line-experiment-4" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="deduction-phase-2">Deduction phase</h3>
+<ul>
+<li>Line could be represent as set of pixels</li>
+<li>To draw line we can’t use Naïve’s draw line algorithm</li>
+<li>To draw line we can use Bresenham’s draw line algorithm</li>
+<li>What about performance?</li>
+</ul>
+</section>
+<section id="draw-line-experiment-5" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="experiment-2">Experiment</h3>
+<p>Let’s implement it together</p>
+</section>
+<section id="draw-line-experiment-6" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="reference-2">Reference</h3>
+<figure>
+<img data-src="img/draw_line.png" alt="" /><figcaption>From: <a href="https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png" class="uri">https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png</a></figcaption>
+</figure>
+</section>
+<section id="draw-line-experiment-7" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="what-is-the-new-knowledge-2">What is the new knowledge?</h3>
+<ul>
+<li>Bresenham’s draw line algorithm is pretty good to use for draw lines</li>
+</ul>
+</section>
+<section id="famous-references" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="stanford-bunny">Stanford bunny</h3>
+<figure>
+<img data-src="img/bunny.png" alt="" /><figcaption>From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="bunny2000">[2]</span></p>
+</section>
+<section id="famous-references-1" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="utah-teapot">Utah teapot</h3>
+<figure>
+<img data-src="img/teapot.png" alt="" /><figcaption>From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="McGuire2017Data">[3]</span></p>
+</section>
+<section id="famous-references-2" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="cornel-box">Cornel box</h3>
+<figure>
+<img data-src="img/cornell_box.jpg" alt="" /><figcaption>From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="cornellbox2005">[4]</span></p>
+</section>
+<section id="famous-references-3" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="sponza-palace">Sponza palace</h3>
+<figure>
+<img data-src="img/sponza.png" alt="" /><figcaption>From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="McGuire2017Data">[3]</span></p>
+</section>
+<section id="wavefront-obj-format" class="slide level2">
+<h2>Wavefront OBJ format</h2>
+<ul>
+<li><code>#</code> - comment</li>
+<li><code>v</code> - vertex</li>
+<li><code>vn</code> - normals</li>
+<li><code>vt</code> - texture coordinates</li>
+<li><code>f</code> - face (polygon) - list of vertexes, normals, and tex coordinates <span class="citation" data-cites="fileformat_info_obj">[5]</span></li>
+</ul>
+</section>
+<section id="cornell-box-example" class="slide level2">
+<h2>Cornell box example</h2>
+<pre class="obj"><code>## Object floor
+v  -1.01  0.00   0.99
+v   1.00  0.00   0.99
+v   1.00  0.00  -1.04
+v  -0.99  0.00  -1.04
+
+g floor
+usemtl floor
+f -4 -3 -2 -1
+
+## Object ceiling
+v  -1.02  1.99   0.99  
+v  -1.02  1.99  -1.04
+v   1.00  1.99  -1.04
+v   1.00  1.99   0.99
+
+g ceiling
+usemtl ceiling
+f -4 -3 -2 -1</code></pre>
+</section>
+<section id="read-obj-experiment" class="slide level2">
+<h2>“Read obj” experiment</h2>
+<h3 id="deduction-phase-3">Deduction phase</h3>
+<ul>
+<li>Obj file contains faces</li>
+<li>Each face contains vertexes</li>
+<li>Does drawing line between vertexes in each face give us a wire frame image?</li>
+<li>What about performance?</li>
+</ul>
+</section>
+<section id="read-obj-experiment-1" class="slide level2">
+<h2>“Read obj” experiment</h2>
+<h3 id="experiment-3">Experiment</h3>
+<p>Let’s implement it together</p>
+</section>
+<section id="read-obj-experiment-2" class="slide level2">
+<h2>“Read obj” experiment</h2>
+<h3 id="what-is-the-new-knowledge-3">What is the new knowledge?</h3>
+<ul>
+<li>Image is not correct. We need more accurate translations</li>
+</ul>
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references" role="doc-bibliography">
+<div id="ref-Shirley_book">
+<p>1. Marschner S., Shirley P. Fundamentals of computer graphics, fourth edition. 4th ed. Natick, MA, USA: A. K. Peters, Ltd., 2016.</p>
+</div>
+<div id="ref-bunny2000">
+<p>2. Turk G. The stanford bunny [Electronic resource]. 2000. URL: <a href="https://www.cc.gatech.edu/~turk/bunny/bunny.html">https://www.cc.gatech.edu/~turk/bunny/bunny.html</a>.</p>
+</div>
+<div id="ref-McGuire2017Data">
+<p>3. McGuire M. Computer graphics archive. 2017.</p>
+</div>
+<div id="ref-cornellbox2005">
+<p>4. Computer Graphics C.U.P. of. Cornell box data [Electronic resource]. 2005. URL: <a href="http://www.graphics.cornell.edu/online/box/data.html">http://www.graphics.cornell.edu/online/box/data.html</a>.</p>
+</div>
+<div id="ref-fileformat_info_obj">
+<p>5. Wavefront obj file format summary // FileFormat.Info.</p>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/math/math.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>

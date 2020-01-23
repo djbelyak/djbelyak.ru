@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture #8: Shadows</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reset.css">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/lectures.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture #8: Shadows</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">25.01.2020</p>
+</section>
+
+<section id="shadow-mapping" class="slide level2">
+<h2>Shadow mapping</h2>
+<p>There are two passes:</p>
+<ol type="1">
+<li>Shadow map generation</li>
+<li>Apply shadow maps to final image <span class="citation" data-cites="opengltutorial_org2012">[1]</span></li>
+</ol>
+</section>
+<section id="shadow-map-generation" class="slide level2">
+<h2>Shadow map generation</h2>
+<ul>
+<li>Setup square render target (only depth buffer)</li>
+<li>Place a camera to light source and look to opposite direction</li>
+<li>Make an orthographical projection</li>
+<li>Render all geometry <span class="citation" data-cites="opengltutorial_org2012">[1]</span></li>
+</ul>
+</section>
+<section id="apply-shadow-maps-to-final-image" class="slide level2">
+<h2>Apply shadow maps to final image</h2>
+<ul>
+<li>Render final scene</li>
+<li>Using model space vertex position compute shadow map coordinates</li>
+<li>If <span class="math inline">\(Z\)</span> from shadow map and computed <span class="math inline">\(Z\)</span> are different - there is a shadow</li>
+<li>Reduce color intensity in shadow pixels <span class="citation" data-cites="opengltutorial_org2012">[1]</span></li>
+</ul>
+</section>
+<section id="shadow-mapping-experiment" class="slide level2">
+<h2>“Shadow mapping” experiment</h2>
+<h3 id="experiment">Experiment</h3>
+<p>Let’s implement it together</p>
+</section>
+<section id="shadow-mapping-experiment-1" class="slide level2">
+<h2>“Shadow mapping” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+</section>
+<section id="individual-assignments" class="slide level2">
+<h2>Individual assignments</h2>
+<p>Due date: Feb 21</p>
+<ol type="1">
+<li>Black image</li>
+<li>Color space</li>
+<li>Bresenham’s line algorithm</li>
+<li>Read OBJ file</li>
+<li>Projections</li>
+<li>Triangle rasterization</li>
+<li>Z-buffer culling</li>
+<li>Phong model</li>
+<li>Texturing</li>
+<li>Shadow mapping</li>
+</ol>
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references" role="doc-bibliography">
+<div id="ref-opengltutorial_org2012">
+<p>1. opengl-tutorial.org. Tutorial 16 : Shadow mapping [Electronic resource]. 2012. URL: <a href="http://www.opengl-tutorial.org/ru/intermediate-tutorials/tutorial-16-shadow-mapping/">http://www.opengl-tutorial.org/ru/intermediate-tutorials/tutorial-16-shadow-mapping/</a>.</p>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/math/math.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
