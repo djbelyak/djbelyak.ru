@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture #15: Denoising</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reset.css">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/lectures.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture #15: Denoising</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">22.02.2020</p>
+</section>
+
+<section id="number-of-ray-and-denoising-issue" class="slide level2">
+<h2>Number of ray and denoising issue</h2>
+<p>Aim of real-time computer graphics is to produce the image as soon as possible.</p>
+</section>
+<section id="sampling-techniques" class="slide level2">
+<h2>Sampling techniques</h2>
+<figure>
+<img data-src="img/white_vs_blue.png" alt="" /><figcaption>From: <span class="citation" data-cites="alain">[1]</span></figcaption>
+</figure>
+</section>
+<section id="accumulation-techniques" class="slide level2">
+<h2>Accumulation techniques</h2>
+<ul>
+<li>Reproject previous frame with current camera position</li>
+<li>Compute the current frame</li>
+<li>Blend previus and current frame <span class="citation" data-cites="alain">[1]</span></li>
+</ul>
+</section>
+<section id="denoising-experiment" class="slide level2">
+<h2>“Denoising” experiment</h2>
+<h3 id="todo">TODO</h3>
+<ul>
+<li>Remove anisotropic lights</li>
+<li>Make the image noisy (add more bounds and make it MC like)</li>
+<li>Use blue noise texture insted of uniform random numbers</li>
+<li>Accumulate all frames to single one</li>
+</ul>
+</section>
+<section id="denoising-experiment-1" class="slide level2">
+<h2>“Denoising” experiment</h2>
+<h3 id="example">Example</h3>
+<figure>
+<img data-src="img/denoising_up.png" alt="" /><figcaption>From: <a href="https://github.com/djbelyak/rt-template/blob/master/references/denoising_up.png" class="uri">https://github.com/djbelyak/rt-template/blob/master/references/denoising_up.png</a></figcaption>
+</figure>
+</section>
+<section id="denoising-experiment-2" class="slide level2">
+<h2>“Denoising” experiment</h2>
+<ul>
+<li>Frame is drawn faster</li>
+<li>Frame is very noisy</li>
+<li>Accumulated image looks very realistic</li>
+</ul>
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references" role="doc-bibliography">
+<div id="ref-alain">
+<p>1. Galvan A. Ray tracing denoising [Electronic resource]. 2019. URL: <a href="https://alain.xyz/blog/raytracing-denoising">https://alain.xyz/blog/raytracing-denoising</a>.</p>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/math/math.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
