@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 03: 3D to 2D projections</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 03: 3D to 2D projections</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">23.10.2020</p>
+</section>
+
+<section id="what-is-a-rasteriztion" class="slide level2">
+<h2>What is a rasteriztion</h2>
+<p>It’s possible to construct any image using the next operation:</p>
+<ul>
+<li>draw a point</li>
+<li>draw a line**</li>
+<li><strong>draw a triangle</strong></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="rendering-pipeline" class="slide level2">
+<h2>Rendering pipeline</h2>
+<figure>
+<img data-src="img/pipeline-dx11.png" alt="From: https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" /><figcaption aria-hidden="true">From: <a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" class="uri">https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="d-to-2d-conversation-pipeline" class="slide level2">
+<h2>3D to 2D conversation pipeline</h2>
+<ol type="1">
+<li>From model space to world space</li>
+<li>From world space to view space (camera space)</li>
+<li>From view space to projection space</li>
+<li>From projection space to clipping space</li>
+<li>From clipping space to homogeneous screen space</li>
+<li>From homogeneous screen space to screen space <span class="citation" data-cites="satranmichaeljacobsmike2019">[1]</span> <!-- slide --></li>
+</ol>
+</section>
+<section id="spaces" class="slide level2">
+<h2>Spaces</h2>
+<ul>
+<li>Model space - coordinate system where the object was created</li>
+<li>World space - where all object located in proper locations</li>
+<li>View space - a space located around camera</li>
+<li>Projection space - a projected camera frustrum to cube space</li>
+<li>Screen space - a space of resulted image <span class="citation" data-cites="serranoharold2015">[2]</span> <!-- slide --></li>
+</ul>
+</section>
+<section id="homogeneous-coordinates" class="slide level2">
+<h2>Homogeneous coordinates</h2>
+<p>Homogeneous coordinates - cartesian coordinates + 1 dimension</p>
+<p><span class="math display">\[ (X, Y, Z) =&gt; (x, y, z, w) \]</span></p>
+<p><span class="math display">\[ X = x/w, Y = y/w, Z = z/w \]</span> <span class="citation" data-cites="jia2014homogeneous">[3]</span> <!-- slide --></p>
+</section>
+<section id="transformations-in-homogeneous-coordinates" class="slide level2">
+<h2>Transformations in homogeneous coordinates</h2>
+<p><span class="math display">\[T(\overrightarrow{x}) = A\overrightarrow{x}\]</span></p>
+<p>where <span class="math display">\[A = \left[\begin{array}{cccc}
+    x1 &amp; x2 &amp; x3 &amp; x4   \\
+    y1 &amp; y2 &amp; y3 &amp; y4   \\
+    z1 &amp; z2 &amp; z3 &amp; z4   \\
+    w1 &amp; w2 &amp; w3 &amp; w4
+    \end{array}\right]\]</span> <span class="citation" data-cites="alamiamarco">[4]</span> <!-- slide --></p>
+</section>
+<section id="translation-in-homogeneous-coordinates" class="slide level2">
+<h2>Translation in homogeneous coordinates</h2>
+<p><span class="math inline">\(\overrightarrow{tr}\)</span> - vector of translation</p>
+<p><span class="math display">\[T = \left[\begin{array}{cccc}
+    1 &amp; 0 &amp; 0 &amp; tr.x    \\
+    0 &amp; 1 &amp; 0 &amp; tr.y    \\
+    0 &amp; 0 &amp; 1 &amp; tr.z   \\
+    0 &amp; 0 &amp; 0 &amp; 1
+    \end{array}\right]\]</span> <span class="citation" data-cites="alamiamarco">[4]</span> <!-- slide --></p>
+</section>
+<section id="scaling-in-homogeneous-coordinates" class="slide level2">
+<h2>Scaling in homogeneous coordinates</h2>
+<p><span class="math inline">\(\overrightarrow{scale}\)</span> - vector of scaling</p>
+<p><span class="math display">\[S = \left[\begin{array}{cccc}
+    scale.x &amp; 0 &amp; 0 &amp; 0 \\
+    0 &amp; scale.y &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; scale.z &amp; 0   \\
+    0 &amp; 0 &amp; 0 &amp; 1
+    \end{array}\right]\]</span> <span class="citation" data-cites="alamiamarco">[4]</span> <!-- slide --></p>
+</section>
+<section id="rotation-around-x" class="slide level2">
+<h2>Rotation around X</h2>
+<p><span class="math inline">\(\alpha\)</span> - angle of rotation around axis X</p>
+<p><span class="math display">\[R_x = \left[\begin{array}{cccc}
+    1 &amp; 0 &amp; 0 &amp; 0   \\
+    0 &amp; cos(\alpha) &amp; -sin(\alpha) &amp; 0  \\
+    0 &amp; sin(\alpha) &amp; cos(\alpha) &amp; 0   \\
+    0 &amp; 0 &amp; 0 &amp; 1
+    \end{array}\right]\]</span> <span class="citation" data-cites="alamiamarco">[4]</span> <!-- slide --></p>
+</section>
+<section id="rotation-around-y" class="slide level2">
+<h2>Rotation around Y</h2>
+<p><span class="math inline">\(\beta\)</span> - angle of rotation around axis Y</p>
+<p><span class="math display">\[R_y = \left[\begin{array}{cccc}
+    cos(\beta) &amp; 0 &amp; sin(\beta) &amp; 0 \\
+    0 &amp; 1 &amp; 0 &amp; 0   \\
+    -sin(\beta) &amp; 0 &amp; cos(\beta) &amp; 0   \\
+    0 &amp; 0 &amp; 0 &amp; 1
+    \end{array}\right]\]</span> <span class="citation" data-cites="alamiamarco">[4]</span> <!-- slide --></p>
+</section>
+<section id="rotation-around-z" class="slide level2">
+<h2>Rotation around Z</h2>
+<p><span class="math inline">\(\gamma\)</span> - angle of rotation around axis Z</p>
+<p><span class="math display">\[R_z = \left[\begin{array}{cccc}
+    cos(\gamma) &amp; -sin(\gamma) &amp; 0 &amp; 0  \\
+    sin(\gamma) &amp; cos(\gamma) &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; 1 &amp; 0   \\
+    0 &amp; 0 &amp; 0 &amp; 1
+    \end{array}\right]\]</span> <span class="citation" data-cites="alamiamarco">[4]</span> <!-- slide --></p>
+</section>
+<section id="world-transformations" class="slide level2">
+<h2>World transformations</h2>
+<p><span class="math display">\[World=TRS\]</span></p>
+<p>First scale, then rotate, then translate <!-- slide --></p>
+</section>
+<section id="camera-model" class="slide level2">
+<h2>Camera model</h2>
+<ul>
+<li><span class="math inline">\(\overrightarrow{Eye}\)</span> - camera location vector</li>
+<li><span class="math inline">\(\overrightarrow{At}\)</span> - camera look-at target</li>
+<li><span class="math inline">\(\overrightarrow{Up}\)</span> - camera up vector (or world up direction) <!-- slide --></li>
+</ul>
+</section>
+<section id="view-transformations" class="slide level2">
+<h2>View transformations</h2>
+<p><span class="math display">\[ \overrightarrow{zaxis} = \frac{\overrightarrow{Eye} - \overrightarrow{At}}{||\overrightarrow{Eye} - \overrightarrow{At}||} \]</span> <span class="math display">\[ \overrightarrow{xaxis} = \frac{\overrightarrow{Up} \times \overrightarrow{zaxis}}{||\overrightarrow{Up} \times \overrightarrow{zaxis}||}\]</span> <span class="math display">\[ \overrightarrow{yaxis} = \overrightarrow{zaxis} \times \overrightarrow{xaxis} \]</span> <!-- slide --></p>
+</section>
+<section id="view-transformations-1" class="slide level2">
+<h2>View transformations</h2>
+<p><span class="math display">\[View = \left[\begin{array}{cccc}
+    xaxis.x &amp; yaxis.x &amp; zaxis.x &amp; 0 \\
+    xaxis.y &amp; yaxis.y &amp; zaxis.y &amp; 0 \\
+    xaxis.z &amp; yaxis.z &amp; zaxis.z &amp; 0   \\
+    \overrightarrow{xaxis} \cdot \overrightarrow{eye} &amp; \overrightarrow{yaxis} \cdot \overrightarrow{eye} &amp; \overrightarrow{zaxis} \cdot \overrightarrow{eye} &amp; 1
+    \end{array}\right]\]</span> <!-- slide --></p>
+</section>
+<section id="projection-parameters" class="slide level2">
+<h2>Projection parameters</h2>
+<ul>
+<li><span class="math inline">\(S_w\)</span> - screen window width in camera space in near clipping plane</li>
+<li><span class="math inline">\(S_h\)</span> - screen window height in camera space in near clipping plane</li>
+<li><span class="math inline">\(Z_n\)</span> - distance to the near clipping plane along Z axes in camera space</li>
+<li><span class="math inline">\(Z_f\)</span> - distance to the far clipping plane along Z axes in camera space <!-- slide --></li>
+</ul>
+</section>
+<section id="orthogonal-projection" class="slide level2">
+<h2>Orthogonal projection</h2>
+<p><span class="math display">\[Projortho = \left[\begin{array}{cccc}
+    \frac{2}{S_w} &amp; 0 &amp; 0 &amp; 0   \\
+    0 &amp; \frac{2}{S_h} &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; \frac{1}{Z_f-Z_n} &amp; 0   \\
+    0 &amp; 0 &amp; \frac{-Z_n}{Z_f-Z_n} &amp; 1
+    \end{array}\right]\]</span></p>
+<!-- slide -->
+</section>
+<section id="perspective-projection" class="slide level2">
+<h2>Perspective projection</h2>
+<p><span class="math display">\[Proj = \left[\begin{array}{cccc}
+    \frac{2Z_n}{S_w} &amp; 0 &amp; 0 &amp; 0    \\
+    0 &amp; \frac{2Z_n}{S_h} &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; \frac{Z_f}{Z_f-Z_n} &amp; 1   \\
+    0 &amp; 0 &amp; \frac{-Z_n\cdot Z_f}{Z_f-Z_n} &amp; 0
+    \end{array}\right]\]</span> <!-- slide --></p>
+</section>
+<section id="viewport" class="slide level2">
+<h2>Viewport</h2>
+<p><span class="math display">\[Viewport = \left[\begin{array}{cccc}
+    width &amp; 0 &amp; 0 &amp; 0   \\
+    0 &amp; -height &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; 1 &amp; 0   \\
+    0 &amp; 0 &amp; 0 &amp; 1
+    \end{array}\right]\]</span> <!-- slide --></p>
+</section>
+<section id="chain-transitions-together" class="slide level2">
+<h2>Chain transitions together</h2>
+<p><span class="math display">\[\vec{X} = Viewport \cdot Proj \cdot View \cdot World \cdot \vec{x}\]</span></p>
+</section>
+<section id="dangerous-zone" class="slide level2">
+<h2>Dangerous zone</h2>
+<p>Remember about left-handed and right-handed operations!</p>
+<p>Check correctness of each matrix, e.x. in <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d9/dx9-graphics-reference-d3dx-functions-math">DirecX documentation</a> <span class="citation" data-cites="satranmichaeljacobsmike2019">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="projection-experiment" class="slide level2">
+<h2>“Projection” experiment</h2>
+<h3 id="deduction-phase">Deduction phase</h3>
+<ul>
+<li>All verteces need proper transformation</li>
+<li>What about performance? <!-- slide --></li>
+</ul>
+</section>
+<section id="projection-experiment-1" class="slide level2">
+<h2>“Projection” experiment</h2>
+<h3 id="experiment">Experiment</h3>
+<p>Let’s implement it together <!-- slide --></p>
+</section>
+<section id="projection-experiment-2" class="slide level2">
+<h2>“Projection” experiment</h2>
+<h3 id="reference">Reference</h3>
+<p><img data-src="img/projection.png" alt="From: https://github.com/djbelyak/basic-of-rasterization/blob/main/references/projection.png" /> <!-- slide --></p>
+</section>
+<section id="projection-experiment-3" class="slide level2">
+<h2>“Projection” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+<ul>
+<li>Proper way to map 3D verteces into image</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-satranmichaeljacobsmike2019" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M., Jacobs M. The Direct3D transformation pipeline [Electronic resource]. 2019. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/dxtecharts/the-direct3d-transformation-pipeline">https://docs.microsoft.com/en-us/windows/win32/dxtecharts/the-direct3d-transformation-pipeline</a>.</div>
+</div>
+<div id="ref-serranoharold2015" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Serrano H. From model space to screen space- OpenGL space transformations [Electronic resource]. 2015. URL: <a href="https://www.haroldserrano.com/blog/from-model-space-to-screen-space-opengl-space-transformations">https://www.haroldserrano.com/blog/from-model-space-to-screen-space-opengl-space-transformations</a>.</div>
+</div>
+<div id="ref-jia2014homogeneous" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Jia Y.-B. Homogeneous coordinates // Handout of the Problem Solving Techniques for Applied Computer Science Lecture at Iowa State University. 2014. Vol. 58.</div>
+</div>
+<div id="ref-alamiamarco" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Alamia M. World, view and projection transformation matrices [Electronic resource]. URL: <a href="http://www.codinglabs.net/article_world_view_projection_matrix.aspx">http://www.codinglabs.net/article_world_view_projection_matrix.aspx</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

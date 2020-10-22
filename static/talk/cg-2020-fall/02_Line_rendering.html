@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 02: Line rendering. Obj file</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 02: Line rendering. Obj file</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">23.10.2020</p>
+</section>
+
+<section id="what-is-a-rasteriztion" class="slide level2">
+<h2>What is a rasteriztion</h2>
+<p>It’s possible to construct any image using the next operation:</p>
+<ul>
+<li>draw a point</li>
+<li><strong>draw a line</strong></li>
+<li>draw a triangle</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="simple-line-equation" class="slide level2">
+<h2>Simple line equation</h2>
+<p><span class="math display">\[y = ax+b\]</span></p>
+<!-- slide -->
+</section>
+<section id="equation-from-2-points" class="slide level2">
+<h2>Equation from 2 points</h2>
+<p><span class="math display">\[a = \frac{y_1 - y_2}{x_1 - x_2}\]</span> <span class="math display">\[b = y_1 - x_1\frac{y_1 - y_2}{x_1 - x_2}\]</span></p>
+<p><span class="math display">\[y= y_1 + \frac{y_1 - y_2}{x_1 - x_2}(x - x_1)\]</span></p>
+<!-- slide -->
+</section>
+<section id="naïves-draw-line-algorithm" class="slide level2">
+<h2>Naïve’s draw line algorithm</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>slope <span class="op">=</span> (y_begin <span class="op">-</span> y_end)<span class="op">/</span>(x_begin <span class="op">-</span> x_end)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> <span class="bu">range</span>(x_begin, x_end):</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> y_begin <span class="op">+</span> slope<span class="op">*</span>(x <span class="op">-</span> x_begin)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    draw_point(x, <span class="bu">round</span>(y))</span></code></pre></div>
+<p><span class="citation" data-cites="Shirley_book">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="deduction-phase">Deduction phase</h3>
+<ul>
+<li>Line could be represent as set of pixels</li>
+<li>To draw line we can use Naïve’s draw line algorithm</li>
+<li>What about performance?</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment-1" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="experiment">Experiment</h3>
+<p>Let’s implement it together</p>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment-2" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="reference">Reference</h3>
+<figure>
+<img data-src="img/draw_line.png" alt="From: https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png" class="uri">https://github.com/djbelyak/cg-template/blob/master/references/draw_line.png</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment-3" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+<ul>
+<li>Naïve’s draw line algorithm has an issue with zero-division</li>
+<li>Naïve’s draw line algorithm has an issue with empty spaces</li>
+<li>Naïve’s draw line algorithm doesn’t fit to draw lines</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="bresenhams-draw-line-algorithm" class="slide level2">
+<h2>Bresenham’s draw line algorithm</h2>
+<h3 id="improvements-of-naïves-draw-line-algorithm">Improvements of Naïve’s draw line algorithm</h3>
+<ul>
+<li>Mirror of the best range</li>
+<li>Don’t calculate a line function</li>
+<li>Use error calculation to increment y value <span class="citation" data-cites="Shirley_book">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment-4" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="experiment-1">Experiment</h3>
+<p>Let’s fix it</p>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment-5" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="reference-1">Reference</h3>
+<figure>
+<img data-src="img/draw_line.png" alt="From: https://github.com/djbelyak/basic-of-rasterization/blob/main/references/draw_line.png" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/basic-of-rasterization/blob/main/references/draw_line.png" class="uri">https://github.com/djbelyak/basic-of-rasterization/blob/main/references/draw_line.png</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="draw-line-experiment-6" class="slide level2">
+<h2>“Draw line” experiment</h2>
+<h3 id="what-is-the-new-knowledge-1">What is the new knowledge?</h3>
+<ul>
+<li>Bresenham’s draw line algorithm is pretty good to use for draw lines</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="famous-references-in-computer-graphics" class="slide level2">
+<h2>Famous references in computer graphics</h2>
+<h3 id="stanford-bunny">Stanford bunny</h3>
+<figure>
+<img data-src="img/bunny.png" alt="From: https://casual-effects.com/data" /><figcaption aria-hidden="true">From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="bunny2000">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="famous-references" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="utah-teapot">Utah teapot</h3>
+<figure>
+<img data-src="img/teapot.png" alt="From: https://casual-effects.com/data" /><figcaption aria-hidden="true">From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="McGuire2017Data">[3]</span></p>
+<!-- slide -->
+</section>
+<section id="famous-references-1" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="cornel-box">Cornel box</h3>
+<figure>
+<img data-src="img/cornell_box.jpg" alt="From: https://casual-effects.com/data" /><figcaption aria-hidden="true">From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="cornellbox2005">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="famous-references-2" class="slide level2">
+<h2>Famous references</h2>
+<h3 id="sponza-palace">Sponza palace</h3>
+<figure>
+<img data-src="img/sponza.png" alt="From: https://casual-effects.com/data" /><figcaption aria-hidden="true">From: <a href="https://casual-effects.com/data" class="uri">https://casual-effects.com/data</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="McGuire2017Data">[3]</span></p>
+<!-- slide -->
+</section>
+<section id="wavefront-obj-format" class="slide level2">
+<h2>Wavefront OBJ format</h2>
+<ul>
+<li><code>#</code> - comment</li>
+<li><code>v</code> - vertex</li>
+<li><code>vn</code> - normals</li>
+<li><code>vt</code> - texture coordinates</li>
+<li><code>f</code> - face (polygon) - list of verteces, normals, and tex coordinates <span class="citation" data-cites="fileformat_info_obj">[5]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="cornell-box-example" class="slide level2">
+<h2>Cornell box example</h2>
+<pre class="obj"><code>## Object floor
+v  -1.01  0.00   0.99
+v   1.00  0.00   0.99
+v   1.00  0.00  -1.04
+v  -0.99  0.00  -1.04
+
+g floor
+usemtl floor
+f -4 -3 -2 -1
+
+## Object ceiling
+
+v  -1.02  1.99   0.99  
+v  -1.02  1.99  -1.04
+v   1.00  1.99  -1.04
+v   1.00  1.99   0.99
+
+g ceiling
+usemtl ceiling
+f -4 -3 -2 -1</code></pre>
+<!-- slide -->
+</section>
+<section id="obj-parsing" class="slide level2">
+<h2>Obj parsing</h2>
+<p>Let’s skip reinventing the wheel</p>
+<p>There are a lot of libraries to parse OBJ files</p>
+<p>We will use <a href="https://github.com/tinyobjloader/tinyobjloader">tinyobjloader</a> <span class="citation" data-cites="tinyobjloader">[6]</span></p>
+<!-- slide -->
+</section>
+<section id="how-to-use-tinyobjloader" class="slide level2">
+<h2>How to use tinyobjloader</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TINYOBJLOADER_IMPLEMENTATION </span><span class="co">// define this in only *one* .cc</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;tiny_obj_loader.h&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string inputfile = <span class="st">&quot;cornell_box.obj&quot;</span>;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>tinyobj::<span class="dt">attrib_t</span> attrib;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>vector&lt;tinyobj::<span class="dt">shape_t</span>&gt; shapes;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>vector&lt;tinyobj::<span class="dt">material_t</span>&gt; materials;</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string warn;</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string err;</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> ret = tinyobj::LoadObj(&amp;attrib, &amp;shapes, &amp;materials, &amp;warn, &amp;err, inputfile.c_str());</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (!warn.empty()) {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cout &lt;&lt; warn &lt;&lt; <span class="bu">std::</span>endl;</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (!err.empty()) {</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr &lt;&lt; err &lt;&lt; <span class="bu">std::</span>endl;</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (!ret) {</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  exit(<span class="dv">1</span>);</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">// Loop over shapes</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="dt">size_t</span> s = <span class="dv">0</span>; s &lt; shapes.size(); s++) {</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Loop over faces(polygon)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">size_t</span> index_offset = <span class="dv">0</span>;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="dt">size_t</span> f = <span class="dv">0</span>; f &lt; shapes[s].mesh.num_face_vertices.size(); f++) {</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> fv = shapes[s].mesh.num_face_vertices[f];</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Loop over vertices in the face.</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="dt">size_t</span> v = <span class="dv">0</span>; v &lt; fv; v++) {</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>      <span class="co">// access to vertex</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">index_t</span> idx = shapes[s].mesh.indices[index_offset + v];</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> vx = attrib.vertices[<span class="dv">3</span>*idx.vertex_index+<span class="dv">0</span>];</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> vy = attrib.vertices[<span class="dv">3</span>*idx.vertex_index+<span class="dv">1</span>];</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> vz = attrib.vertices[<span class="dv">3</span>*idx.vertex_index+<span class="dv">2</span>];</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> nx = attrib.normals[<span class="dv">3</span>*idx.normal_index+<span class="dv">0</span>];</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> ny = attrib.normals[<span class="dv">3</span>*idx.normal_index+<span class="dv">1</span>];</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> nz = attrib.normals[<span class="dv">3</span>*idx.normal_index+<span class="dv">2</span>];</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> tx = attrib.texcoords[<span class="dv">2</span>*idx.texcoord_index+<span class="dv">0</span>];</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>      tinyobj::<span class="dt">real_t</span> ty = attrib.texcoords[<span class="dv">2</span>*idx.texcoord_index+<span class="dv">1</span>];</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>      <span class="co">// Optional: vertex colors</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>      <span class="co">// tinyobj::real_t red = attrib.colors[3*idx.vertex_index+0];</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>      <span class="co">// tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">// tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    index_offset += fv;</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="co">// per-face material</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    shapes[s].mesh.material_ids[f];</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><span class="citation" data-cites="tinyobjloader">[6]</span></p>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-Shirley_book" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Marschner S., Shirley P. Fundamentals of computer graphics, fourth edition. 4th ed. Natick, MA, USA: A. K. Peters, Ltd., 2016.</div>
+</div>
+<div id="ref-bunny2000" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Turk G. The stanford bunny [Electronic resource]. 2000. URL: <a href="https://www.cc.gatech.edu/ turk/bunny/bunny.html">https://www.cc.gatech.edu/ turk/bunny/bunny.html</a>.</div>
+</div>
+<div id="ref-McGuire2017Data" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">McGuire M. Computer graphics archive. 2017.</div>
+</div>
+<div id="ref-cornellbox2005" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Computer Graphics C.U.P. of. Cornell box data [Electronic resource]. 2005. URL: <a href="http://www.graphics.cornell.edu/online/box/data.html">http://www.graphics.cornell.edu/online/box/data.html</a>.</div>
+</div>
+<div id="ref-fileformat_info_obj" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Wavefront OBJ file format summary // FileFormat.Info.</div>
+</div>
+<div id="ref-tinyobjloader" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Fujita S. Tinyobjloader [Electronic resource]. 2020. URL: <a href="https://github.com/tinyobjloader/tinyobjloader">https://github.com/tinyobjloader/tinyobjloader</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
