@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 10: Anti-aliasing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 10: Anti-aliasing</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">7.11.2020</p>
+</section>
+
+<section id="kotelnikov-theorem" class="slide level2">
+<h2>Kotelnikov theorem</h2>
+<p>If a function $x(t) $contains no frequencies higher than <span class="math inline">\(B\)</span> hertz, it is completely determined by giving its ordinates at a series of points spaced <span class="math inline">\(1/2B\)</span> seconds apart.</p>
+<!-- slide -->
+</section>
+<section id="anti-aliasing-methods" class="slide level2">
+<h2>Anti-aliasing methods</h2>
+<ol type="1">
+<li>Trace more than 1 ray per pixel</li>
+<li>Blend resulted colors</li>
+</ol>
+<p>[shirely_2009]</p>
+<!-- slide -->
+</section>
+<section id="implementations-of-super-sampling" class="slide level2">
+<h2>Implementations of super sampling</h2>
+<h3 id="todo">TODO</h3>
+<ul>
+<li>Implement super-sampling anti-aliasing</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="implementations-of-super-sampling-1" class="slide level2">
+<h2>Implementations of super sampling</h2>
+<h3 id="reference">Reference</h3>
+<figure>
+<img data-src="img/anti_aliasing.png" alt="From: https://github.com/djbelyak/basic-of-ray-tracing" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/basic-of-ray-tracing" class="uri">https://github.com/djbelyak/basic-of-ray-tracing</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="implementations-of-super-sampling-2" class="slide level2">
+<h2>Implementations of super sampling</h2>
+<h3 id="knowledge">Knowledge</h3>
+<ul>
+<li>Cost of super sampling is huge</li>
+<li>Quality is the best</li>
+</ul>
+</section>
+<section id="references" class="slide level2">
+<h2>References</h2>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

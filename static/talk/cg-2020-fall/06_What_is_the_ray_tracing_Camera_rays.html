@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 06: What is the ray tracing. Camera rays</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 06: What is the ray tracing. Camera rays</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">6.11.2020</p>
+</section>
+
+<section id="administrative-home-workdeadlines" class="slide level2">
+<h2>Administrative: Home work&amp;deadlines</h2>
+<h3 id="rasterization-labs">Rasterization labs</h3>
+<ul>
+<li>Official due date: Saturday, 7 November 2020, 12:00 AM</li>
+<li>Feel free to ask questions via Telegram</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="template-for-the-second-part-of-labs" class="slide level2">
+<h2>Template for the second part of labs</h2>
+<p><a href="https://github.com/djbelyak/basic-of-ray-tracing">github.com/djbelyak/basic-of-ray-tracing</a></p>
+<!-- slide -->
+</section>
+<section id="basics-of-rasterization-recall" class="slide level2">
+<h2>Basics of rasterization recall</h2>
+<h3 id="idea">Idea</h3>
+<ol type="1">
+<li>Create the world as 3D polygons (triangles)</li>
+<li>Project the geometry to 2D plane</li>
+<li>Rasterize each peace of geometry</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="basics-of-rasterization-recall-1" class="slide level2">
+<h2>Basics of rasterization recall</h2>
+<h3 id="pros">Pros</h3>
+<ul>
+<li>Great math underlying</li>
+<li>Low computational complexity</li>
+<li>Clear flow</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="basics-of-rasterization-recall-2" class="slide level2">
+<h2>Basics of rasterization recall</h2>
+<h3 id="cons">Cons</h3>
+<ul>
+<li>Hard to compute lighting</li>
+<li>Hard to compute shadows</li>
+<li>Hell with blending and transparency</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="idea-of-ray-tracing" class="slide level2">
+<h2>Idea of ray tracing</h2>
+<figure>
+<img data-src="img/rt_idea.jpg" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[1]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="mathematical-definition-of-ray" class="slide level2">
+<h2>Mathematical definition of ray</h2>
+<p><span class="math display">\[Ray=origin+t*\vec{direction}\]</span></p>
+<p><span class="math display">\[t&gt;0, |\vec{direction}| = 1\]</span></p>
+<!-- slide -->
+</section>
+<section id="pinehole-camera" class="slide level2">
+<h2>Pinehole camera</h2>
+<figure>
+<img data-src="img/Pinhole-camera.png" alt="From: http://commons.wikimedia.org/wiki/Image:Pinhole-camera.png" /><figcaption aria-hidden="true">From: <a href="http://commons.wikimedia.org/wiki/Image:Pinhole-camera.png" class="uri">http://commons.wikimedia.org/wiki/Image:Pinhole-camera.png</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="camera-ray" class="slide level2">
+<h2>Camera ray</h2>
+<figure>
+<img data-src="img/eyeray_diagram.jpg" alt="From: https://www.gamedev.net/forums/topic/587264-ray-generation-with-rotated-camera/" /><figcaption aria-hidden="true">From: <a href="https://www.gamedev.net/forums/topic/587264-ray-generation-with-rotated-camera/" class="uri">https://www.gamedev.net/forums/topic/587264-ray-generation-with-rotated-camera/</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="Shirley_ray_tracing">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="basic-ray-tracing-scheme" class="slide level2">
+<h2>Basic ray tracing scheme</h2>
+<figure>
+<img data-src="img/ShaderPipeline.svg" alt="From: [3]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="DXRtutorial">[3]</span></figcaption>
+</figure>
+</section>
+<section id="ray-generation-experiment" class="slide level2">
+<h2>“Ray generation” experiment</h2>
+<h3 id="todo">TODO</h3>
+<ul>
+<li>Implement camera rays</li>
+<li>Implement miss function</li>
+</ul>
+</section>
+<section id="ray-generation-experiment-1" class="slide level2">
+<h2>“Ray generation” experiment</h2>
+<h3 id="reference">Reference</h3>
+<figure>
+<img data-src="img/ray_generation.png" alt="From: https://github.com/djbelyak/basic-of-ray-tracing" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/basic-of-ray-tracing" class="uri">https://github.com/djbelyak/basic-of-ray-tracing</a></figcaption>
+</figure>
+</section>
+<section id="ray-generation-experiment-2" class="slide level2">
+<h2>“Ray generation” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+<ul>
+<li>Primary ray color defines color of pixel</li>
+<li>Primary rays make a camera frustrum</li>
+<li>Miss function returns background color</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-Shirley_ray_tracing" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Shirley P. Ray tracing in one weekend. second. Amazon.com Services LLC, 2019. Vol. 1.</div>
+</div>
+<div id="ref-DXRtutorial" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Lefrançois M.-K., Gautron P. DX12 raytracing tutorial - part 2 [Electronic resource]. URL: <a href="https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2">https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

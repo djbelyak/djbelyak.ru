@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 08: Lighting and shadows</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 08: Lighting and shadows</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">6.11.2020</p>
+</section>
+
+<section id="rendering-equation" class="slide level2">
+<h2>Rendering equation</h2>
+<p><span class="math display">\[L_o(X, \vec{\omega_o}) = L_e(X, \vec{\omega_o}) + \int_S L_i(X, \vec{\omega_o}) f_{X,\vec{n}}(\vec{\omega_i}, \vec{\omega_o}) |\vec{\omega_i} \cdot \vec{n} | d{\omega_i} \]</span> <span class="citation" data-cites="McGuire_graphics_codex">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="phong-law" class="slide level2">
+<h2>Phong law</h2>
+<p><span class="math display">\[L(\vec{P}) = Ka + \sum_{lights}{[Kd\vec{N} \cdot \vec{L} + Ks(\vec{V} \cdot \vec{R})^{Ns}]}\]</span></p>
+<p><span class="math display">\[\vec{R} = 2(\vec{N} \cdot \vec{L})\vec{N}−\vec{L}\]</span></p>
+<p><span class="citation" data-cites="Phong">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="lighting-experiment" class="slide level2">
+<h2>“Lighting” experiment</h2>
+<h3 id="todo">TODO</h3>
+<ul>
+<li>Load a scene from an OBJ file</li>
+<li>Intersect all triangles</li>
+<li>Add anisotropic light</li>
+<li>Apply a simplified Phong model</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="lighting-experiment-1" class="slide level2">
+<h2>“Lighting” experiment</h2>
+<h3 id="reference">Reference</h3>
+<figure>
+<img data-src="img/lighting.png" alt="From: https://github.com/djbelyak/basic-of-ray-tracing" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/basic-of-ray-tracing" class="uri">https://github.com/djbelyak/basic-of-ray-tracing</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="lighting-experiment-2" class="slide level2">
+<h2>“Lighting” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+<ul>
+<li>Tinyobjlib usage</li>
+<li>How to bring BRDF to our code</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="shadow-rays" class="slide level2">
+<h2>Shadow rays</h2>
+<figure>
+<img data-src="img/shadow_rays_scheme.png" alt="From: https://www.researchgate.net/figure/1-This-figure-demonstrates-the-concept-of-ray-tracing-A-ray-is-cast-from-the-camera_fig1_236342499" /><figcaption aria-hidden="true">From: <a href="https://www.researchgate.net/figure/1-This-figure-demonstrates-the-concept-of-ray-tracing-A-ray-is-cast-from-the-camera_fig1_236342499" class="uri">https://www.researchgate.net/figure/1-This-figure-demonstrates-the-concept-of-ray-tracing-A-ray-is-cast-from-the-camera_fig1_236342499</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="shadow-rays-experiment" class="slide level2">
+<h2>“Shadow rays” experiment</h2>
+<h3 id="todo-1">TODO</h3>
+<ul>
+<li>Implement shadow ray casting</li>
+<li>Apply shadows to the final image</li>
+<li>Fix a shadow acne</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="shadow-rays-experiment-1" class="slide level2">
+<h2>“Shadow rays” experiment</h2>
+<h3 id="reference-1">Reference</h3>
+<figure>
+<img data-src="img/shadow_rays.png" alt="From: https://github.com/djbelyak/basic-of-ray-tracing" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/basic-of-ray-tracing" class="uri">https://github.com/djbelyak/basic-of-ray-tracing</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="shadow-rays-experiment-2" class="slide level2">
+<h2>“Shadow rays” experiment</h2>
+<h3 id="what-is-the-new-knowledge-1">What is the new knowledge?</h3>
+<ul>
+<li>How to implement hard shadows</li>
+<li>How to fix shadow acne</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-Phong" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Phong B.T. Illumination for computer generated pictures // Commun. ACM. New York, NY, USA: Association for Computing Machinery, 1975. Vol. 18, № 6. P. 311–317.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

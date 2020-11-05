@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 07: Ray intersection. Closest hit</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 07: Ray intersection. Closest hit</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">6.11.2020</p>
+</section>
+
+<section id="sphere-intersection-algorithm" class="slide level2">
+<h2>Sphere intersection algorithm</h2>
+<figure>
+<img data-src="img/sphere-intersect.jpg" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[1]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="plane-intersection-algorithm" class="slide level2">
+<h2>Plane intersection algorithm</h2>
+<figure>
+<img data-src="img/plane-intersect.jpg" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[1]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm" class="slide level2">
+<h2>Möller-Trumbore algorithm</h2>
+<figure>
+<img data-src="img/unit-triangle.jpg" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[1]</span></figcaption>
+</figure>
+<p><span class="citation" data-cites="Moller_algorithm">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-experiment" class="slide level2">
+<h2>“Möller-Trumbore algorithm” experiment</h2>
+<h3 id="todo">TODO</h3>
+<ul>
+<li>Implement sphere intersection</li>
+<li>Implement MT algorithm</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-experiment-1" class="slide level2">
+<h2>“Möller-Trumbore algorithm” experiment</h2>
+<h3 id="reference">Reference</h3>
+<p><strong>TODO: Update the reference</strong></p>
+<figure>
+<img data-src="img/mt_algorithm.png" alt="From: https://github.com/djbelyak/basic-of-ray-tracing\" /><figcaption aria-hidden="true">From: <a href="https://github.com/djbelyak/basic-of-ray-tracing\" class="uri">https://github.com/djbelyak/basic-of-ray-tracing\</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-experiment-2" class="slide level2">
+<h2>“Möller-Trumbore algorithm” experiment</h2>
+<h3 id="what-is-the-new-knowledge">What is the new knowledge?</h3>
+<ul>
+<li>How to implement intersection function for primitives</li>
+<li>How to implement closes hit function</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-Moller_algorithm" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Möller T., Trumbore B. Fast, minimum storage ray-triangle intersection // J. Graph. Tools. USA: A. K. Peters, Ltd., 1997. Vol. 2, № 1. P. 21–28.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
