@@ -20,7 +20,7 @@ organizations:
 # bio: Developer technology engineer.
 
 interests:
-- Artificial neuron networks
+- Artificial neural networks
 - Computer graphics
 - DevOps
 - Nuclear power engineering

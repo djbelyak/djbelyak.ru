@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 15: Per frame updates</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 15: Per frame updates</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">21.11.2020</p>
+</section>
+
+<section class="slide level1">
+
+<h2 id="window-procedure-events">Window procedure events</h2>
+<ul>
+<li><code>WM_KEYDOWN</code> - each time when user press a key</li>
+<li><code>WM_KEYUP</code> - each time when user release a key</li>
+<li><code>WM_PAINT</code> - each time when the windows is redrawing <span class="citation" data-cites="win32">[1]</span></li>
+</ul>
+<!-- slide -->
+<h2 id="on-update-method">On update method</h2>
+<ul>
+<li>Adjust the world variables according to modifiers</li>
+<li>Recompute projection matrices</li>
+<li>Measure performance <span class="citation" data-cites="win32">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="on-key-down" class="slide level1">
+<h1>On key down</h1>
+<ul>
+<li>Parse the keystroke</li>
+<li>Adjust the modifiers <span class="citation" data-cites="win32">[1]</span></li>
+</ul>
+<!-- slide-->
+</section>
+<section id="on-key-up" class="slide level1">
+<h1>On key up</h1>
+<ul>
+<li>Parse the keystroke</li>
+<li>Reset the modifiers <span class="citation" data-cites="win32">[1]</span></li>
+</ul>
+<!-- slide -->
+<h2 class="unnumbered" id="references">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-win32" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M., Jacobs M. Get started with Win32 and c++ [Electronic resource]. 2018. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows">https://docs.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
