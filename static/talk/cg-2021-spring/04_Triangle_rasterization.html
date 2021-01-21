@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 04: Triangle rasterization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 04: Triangle rasterization</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">23.01.2021</p>
+</section>
+
+<section id="rendering-pipeline" class="slide level2">
+<h2>Rendering pipeline</h2>
+<figure>
+<img data-src="img/pipeline-dx11.png" alt="From: https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" /><figcaption aria-hidden="true">From: <a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" class="uri">https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="essential-of-rendering-pipeline" class="slide level2">
+<h2>Essential of rendering pipeline</h2>
+<ul>
+<li><strong>Input assembler</strong> packs vertices to triangles</li>
+<li><strong>Vertex shader</strong> performs projections in homogeneous coordinates</li>
+<li><strong>Rasterizer</strong> decides which pixel will be covered by the triangle and interpolate attributes</li>
+<li><strong>Pixel shader</strong> produces pixel color based on attributes</li>
+</ul>
+</section>
+<section id="edge-function" class="slide level2">
+<h2>Edge function</h2>
+<p>Let’s take two points <span class="math inline">\((X, Y)\)</span> and <span class="math inline">\((X+dx, Y=dy)\)</span></p>
+<p>Define an edge function:</p>
+<p><span class="math display">\[E(x, y) = (x - X)dy - (y - Y)dx\]</span></p>
+<p><span class="citation" data-cites="pineda1988parallel">[1]</span> <!-- slide --></p>
+</section>
+<section id="edge-function-values" class="slide level2">
+<h2>Edge function values</h2>
+<p>If <span class="math inline">\(E(x, y)&gt;0\)</span> then <span class="math inline">\((x, y)\)</span> on the “right” side</p>
+<p>If <span class="math inline">\(E(x, y)&lt;0\)</span> then <span class="math inline">\((x, y)\)</span> on the “left” side</p>
+<p>If <span class="math inline">\(E(x, y)=0\)</span> then <span class="math inline">\((x, y)\)</span> on the edge</p>
+<p><span class="citation" data-cites="pineda1988parallel">[1]</span> <!-- slide --></p>
+</section>
+<section id="edge-function-view" class="slide level2">
+<h2>Edge function view</h2>
+<p><img data-src="img/edge_function.png" class="r-stretch" height="400" alt="From: https://www.cs.drexel.edu/~david/Classes/Papers/comp175-06-pineda.pdf" /> <span class="citation" data-cites="pineda1988parallel">[1]</span> <!-- slide --></p>
+</section>
+<section id="clockwise-vs-counter-clockwise" class="slide level2">
+<h2>Clockwise vs counter-clockwise</h2>
+<p><img data-src="img/cw_ccw.png" class="r-stretch" height="400" alt="From: https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage" /> <span class="citation" data-cites="scratchapixel_rasterization">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="barycentric-coordinates" class="slide level2">
+<h2>Barycentric coordinates</h2>
+<p>Let exists <span class="math inline">\(P=uA+vB+wC\)</span>, where <span class="math inline">\(u+v+w=1\)</span></p>
+<p><img data-src="img/barycentric.png" class="r-stretch" height="300" alt="From: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates" /> <span class="citation" data-cites="scratchapixel_rendering_a_triangle">[3]</span></p>
+<!-- slide -->
+</section>
+<section id="d-cross-product-cheating" class="slide level2">
+<h2>2D cross product cheating</h2>
+<p><span class="math display">\[(u_1, u_2, 0) \times (v_1, v_2, 0) = (0, 0, u_1v_1-u_2v_1)\]</span></p>
+<p>and compare with</p>
+<p><span class="math display">\[E(x, y) = (x - X)dy - (y - Y)dx\]</span></p>
+<!-- slide -->
+</section>
+<section id="lab-rasterization" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: Rasterization</h2>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-pineda1988parallel" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Pineda J. A parallel algorithm for polygon rasterization // Proceedings of the 15th annual conference on computer graphics and interactive techniques. 1988. P. 17–20.</div>
+</div>
+<div id="ref-scratchapixel_rasterization" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Rasterization: A practical implementation [Electronic resource]. 2015. URL: <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage">https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage</a>.</div>
+</div>
+<div id="ref-scratchapixel_rendering_a_triangle" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Ray tracing: Rendering a triangle [Electronic resource]. 2014. URL: <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates">https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

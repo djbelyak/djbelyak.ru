@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 01: Computer graphics in Game development. Output devices</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 01: Computer graphics in Game development. Output devices</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">22.01.2021</p>
+</section>
+
+<section id="who-i-am" class="slide level2">
+<h2>Who I am</h2>
+<p>Ivan Belyavtsev</p>
+<p>Computer Graphics Developer technology engineer at Nvidia</p>
+<p>Researcher and educator in Computer science</p>
+<p><a href="https://djbelyak.ru">djbelyak.ru</a></p>
+<!-- slide -->
+</section>
+<section id="disclaimer" class="slide level2">
+<h2>Disclaimer</h2>
+<p>This course was prepared or accomplished by Ivan Belyavtsev in his personal capacity. The opinions expressed in this course are the author’s own and do not represent official policy or position of Nvidia corporation.</p>
+<!-- slide -->
+</section>
+<section id="schedule" class="slide level2">
+<h2>Schedule</h2>
+<ol type="1">
+<li>01/22-10/23 - 5 classes</li>
+<li>02/05-02/06 - 5 classes</li>
+<li>02/19-02/20 - 5 classes</li>
+<li>03/05-03/06 - 5 classes + Final assessment</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="syllabus" class="slide level2">
+<h2>Syllabus</h2>
+<ol type="1">
+<li>01/22-10/23 - Basics of rendering</li>
+<li>02/05-02/06 - Basics of ray tracing</li>
+<li>02/19-02/20 - Basics of DirectX 12</li>
+<li>03/05-03/06 - Advanced technics and algorithms</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="caution" class="slide level2">
+<h2>Caution</h2>
+<p>This course requires a lot of discipline and energy!</p>
+<!-- slide -->
+</section>
+<section id="expectations-vs-reality" class="slide level2">
+<h2>Expectations vs reality</h2>
+<center>
+<blockquote class="twitter-tweet">
+<p lang="en" dir="ltr">
+unreal: <em>billions</em> of triangles<br>[extremely AAA demo]<br><br>me: <a href="https://t.co/OBcsTyfUfi">pic.twitter.com/OBcsTyfUfi</a>
+</p>
+— Freya Holmér (<span class="citation" data-cites="FreyaHolmer">[<strong>FreyaHolmer?</strong>]</span>) <a href="https://twitter.com/FreyaHolmer/status/1260651296845033473?ref_src=twsrc%5Etfw">May 13, 2020</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</center>
+<!-- slide -->
+</section>
+<section id="how-we-will-work" class="slide level2">
+<h2>How we will work</h2>
+<ul>
+<li>During classes
+<ul>
+<li>Little portion of useful information</li>
+<li>Practical exercises based on lab</li>
+</ul></li>
+<li>At home
+<ul>
+<li>Repeating of materials</li>
+<li>Complete labs</li>
+<li>Make something creative</li>
+<li>Submit you your labs before the next block</li>
+</ul></li>
+<li>Final
+<ul>
+<li>Test in Moodle</li>
+</ul></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="what-we-wont-cover" class="slide level2">
+<h2>What we won’t cover</h2>
+<ul>
+<li>3D modeling as art</li>
+<li>Animation</li>
+<li>Game engines</li>
+<li>Music and sounds</li>
+<li>Game design</li>
+<li>Network</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="hardware-requirements" class="slide level2">
+<h2>Hardware requirements</h2>
+<p>PC with Windows 10 or VM</p>
+<!-- slide -->
+</section>
+<section id="software-requirements" class="slide level2">
+<h2>Software requirements</h2>
+<ul>
+<li><a href="https://git-scm.com/">Git</a></li>
+<li><a href="https://premake.github.io/download.html">Premake5</a></li>
+<li><a href="https://visualstudio.microsoft.com/ru/vs/community/">Visual Studio Community</a></li>
+<li>[Optional] <a href="https://marketplace.visualstudio.com/items?itemName=vs-publisher-141975.SwitchStartupProjectForVS2019">SwitchStartupProject for VS 2019</a></li>
+<li>[Optional] <a href="https://marketplace.visualstudio.com/items?itemName=MBulli.SmartCommandlineArguments">Smart Command Line Arguments</a></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="these-slides" class="slide level2">
+<h2>These slides</h2>
+<ul>
+<li>Moodle page: <a href="https://moodle.innopolis.university/course/view.php?id=721">moodle.innopolis.university/course/view.php?id=721</a></li>
+<li>My webpage: <a href="https://djbelyak.ru">djbelyak.ru</a></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="communication-channels" class="slide level2">
+<h2>Communication channels</h2>
+<ul>
+<li>Moodle page: <a href="https://moodle.innopolis.university/course/view.php?id=721">moodle.innopolis.university/course/view.php?id=721</a></li>
+<li>Course channel in Telegram: <a href="https://t.me/joinchat/TrKXjx6WYBS0cauq">https://t.me/joinchat/TrKXjx6WYBS0cauq</a></li>
+<li>Course chat in Telegram: <a href="https://t.me/joinchat/TtFMGkLkstOpJ_DQ">https://t.me/joinchat/TtFMGkLkstOpJ_DQ</a></li>
+</ul>
+<p><img data-src="img/telegram_channel.png" /> <img data-src="img/telegram_chat.png" /></p>
+<!-- slide -->
+</section>
+<section id="how-we-will-dive-into-computer-graphics" class="slide level2">
+<h2>How we will dive into computer graphics</h2>
+<figure>
+<img data-src="img/kant.jpg" class="r-stretch" height="300" alt="From: https://i.imgur.com/6qgzdkE.jpg" /><figcaption aria-hidden="true">From: <a href="https://i.imgur.com/6qgzdkE.jpg" class="uri">https://i.imgur.com/6qgzdkE.jpg</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="viktor-kanke" class="slide level2">
+<h2>Viktor Kanke</h2>
+<figure>
+<img data-src="img/kanke.jpg" class="r-stretch" alt="From: https://obninsk-discovery.ru/besedka/metod-kanke" /><figcaption aria-hidden="true">From: <a href="https://obninsk-discovery.ru/besedka/metod-kanke" class="uri">https://obninsk-discovery.ru/besedka/metod-kanke</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="types-of-sciences" class="slide level2">
+<h2>Types of sciences</h2>
+<ul>
+<li>Social</li>
+<li>Natural</li>
+<li>Axiological <span class="citation" data-cites="kanke_book">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="aim-and-principles-of-applied-sciences" class="slide level2">
+<h2>Aim and principles of applied sciences</h2>
+<ul>
+<li>Aim to make something the most effective way</li>
+<li>Efficiency maximization principle <span class="citation" data-cites="kanke_tech">[2]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="aim-and-principles-of-computer-science" class="slide level2">
+<h2>Aim and principles of computer science</h2>
+<ul>
+<li>Is computer science an applied science? <span class="citation" data-cites="kanke_book">[1]</span></li>
+<li>Aim to process, store, and transfer information by the most effective way <span class="citation" data-cites="kanke_cs">[3]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="aim-and-principles-of-computer-graphics" class="slide level2">
+<h2>Aim and principles of computer graphics</h2>
+<ul>
+<li>Is computer graphics a computer science?</li>
+<li>Aim to create, process, store, and transfer visual information by the most effective way</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="aim-and-principles-computer-graphics-in-game-development" class="slide level2">
+<h2>Aim and principles computer graphics in game development</h2>
+<ul>
+<li>Aim to create, process, store, and transfer of visual representation of an in-game world to a player by the most effective way</li>
+<li>What’s mean “the most effective way” here?</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="lets-define-what-is-the-visual-representation" class="slide level2">
+<h2>Let’s define what is the visual representation</h2>
+<p>Physics and anatomy will help us</p>
+<!-- slide -->
+</section>
+<section id="what-is-the-light" class="slide level2">
+<h2>What is the light</h2>
+<figure>
+<img data-src="img/human-visible-color-spectrum.jpg" class="r-stretch" alt="From: https://www.color-management-guide.com/eye-and-colors.html" /><figcaption aria-hidden="true">From: <a href="https://www.color-management-guide.com/eye-and-colors.html" class="uri">https://www.color-management-guide.com/eye-and-colors.html</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="fricharnaud2015">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="human-eye" class="slide level2">
+<h2>Human eye</h2>
+<ul>
+<li>Rods - light quantity</li>
+<li>Cones - light quality
+<ul>
+<li>S-cones - blue</li>
+<li>M-cones - green</li>
+<li>L-cones - red</li>
+</ul></li>
+</ul>
+<p><span class="citation" data-cites="McGuire_graphics_codex">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="color-perception" class="slide level2">
+<h2>Color perception</h2>
+<figure>
+<img data-src="img/spectrum-absorption-light-eye.jpg" class="r-stretch" alt="From: https://www.color-management-guide.com/eye-and-colors.html" /><figcaption aria-hidden="true">From: <a href="https://www.color-management-guide.com/eye-and-colors.html" class="uri">https://www.color-management-guide.com/eye-and-colors.html</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="fricharnaud2015">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="pixels-in-depth" class="slide level2">
+<h2>Pixels in depth</h2>
+<figure>
+<img data-src="img/pixels-monitor.jpg" class="r-stretch" alt="From: https://www.color-management-guide.com/eye-and-colors.html" /><figcaption aria-hidden="true">From: <a href="https://www.color-management-guide.com/eye-and-colors.html" class="uri">https://www.color-management-guide.com/eye-and-colors.html</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="fricharnaud2015">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="pixels-in-depth-ipad-2-and-ipad-3" class="slide level2">
+<h2>Pixels in depth (iPad 2 and iPad 3)</h2>
+<figure>
+<img data-src="img/ipad-3-vs-ipad-2-ips-screens-640x353.jpg" class="r-stretch" alt="From: https://www.extremetech.com/computing/122725-what-the-ipad-3s-retina-display-looks-like-under-a-microscope" /><figcaption aria-hidden="true">From: <a href="https://www.extremetech.com/computing/122725-what-the-ipad-3s-retina-display-looks-like-under-a-microscope" class="uri">https://www.extremetech.com/computing/122725-what-the-ipad-3s-retina-display-looks-like-under-a-microscope</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="anthonysebastian2012">[6]</span></p>
+<!-- slide -->
+</section>
+<section id="srgb-gamut" class="slide level2">
+<h2>sRGB gamut</h2>
+<figure>
+<img data-src="img/CIExy1931_sRGB.png" class="r-stretch" height="300" alt="From: https://upload.wikimedia.org/wikipedia/commons/a/a8/CIExy1931_sRGB.png" /><figcaption aria-hidden="true">From: <a href="https://upload.wikimedia.org/wikipedia/commons/a/a8/CIExy1931_sRGB.png" class="uri">https://upload.wikimedia.org/wikipedia/commons/a/a8/CIExy1931_sRGB.png</a></figcaption>
+</figure>
+<p><span class="citation" data-cites="hunt2011measuring">[7]</span></p>
+<!-- slide -->
+</section>
+<section id="lets-dive-into-labs" class="slide level2">
+<h2>Let’s dive into labs</h2>
+<ol type="1">
+<li>Create your own repo base upon the template: <a href="https://github.com/djbelyak/computer-graphics-in-game-development-s2021/">https://github.com/djbelyak/computer-graphics-in-game-development-s2021/</a></li>
+<li>Don’t forget <code>git submodule update --init --recursive</code> to get dependencies</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="using-premake" class="slide level2">
+<h2>Using premake</h2>
+<ol type="1">
+<li>Download <a href="https://premake.github.io/download.html">Premake5</a> and put in to <code>PATH</code></li>
+<li>Run premake in your repo:</li>
+</ol>
+<pre class="bat"><code>premake vs2019</code></pre>
+<!-- slide -->
+</section>
+<section id="lab-clearing-of-resources" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: Clearing of resources</h2>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-kanke_book" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Kanke V.A. Istoriya, filosofiya i metodologiya tehniki i informatiki. uchebnik. Uriat, 2014.</div>
+</div>
+<div id="ref-kanke_tech" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Kanke V.A. Metascientific foundations of understanding of status of technology // Nuclear Energy and Technology. 2017. Vol. 3.</div>
+</div>
+<div id="ref-kanke_cs" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Kanke V.A. Metascientific and philosophical reasons to define the status of computer science // Automatic Documentation and Mathematical Linguistics. 2017. Vol. 51. P. 101–107.</div>
+</div>
+<div id="ref-fricharnaud2015" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Frich A. The human eye and colour perception [Electronic resource]. 2015. URL: <a href="https://www.color-management-guide.com/eye-and-colors.html">https://www.color-management-guide.com/eye-and-colors.html</a>.</div>
+</div>
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-anthonysebastian2012" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Anthony S. What the iPad 3’s retina display looks like under a microscope [Electronic resource]. 2012. URL: <a href="https://What the iPad 3’s Retina display looks like under a microscope">What the iPad 3’s Retina display looks like under a microscope</a>.</div>
+</div>
+<div id="ref-hunt2011measuring" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Hunt R.W.G., Pointer M.R. Measuring colour. Wiley, 2011.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
