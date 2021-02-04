@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 07: Ray intersection algorithms</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 07: Ray intersection algorithms</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">4.02.2021</p>
+</section>
+
+<section id="intersection-function" class="slide level2">
+<h2>Intersection function</h2>
+<p><strong>Intersection function</strong> returns whether or not ray intersects an object. If the intersection exists, the intersection function will return an intersection point <span class="citation" data-cites="DXRtutorial">[1]</span>, <span class="citation" data-cites="optix">[2]</span></p>
+<figure>
+<img data-src="img/ShaderPipeline.svg" class="r-stretch" height="300" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="DXRtutorial">[1]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="sphere-intersection-algorithm" class="slide level2">
+<h2>Sphere intersection algorithm</h2>
+<figure>
+<img data-src="img/sphere-intersect.jpg" class="r-stretch" height="300" alt="From: [3]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[3]</span></figcaption>
+</figure>
+<p><span class="citation" data-cites="McGuire_graphics_codex">[3]</span>, <span class="citation" data-cites="Shirley_ray_tracing">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="sphere-intersection-algorithm-deduction" class="slide level2">
+<h2>Sphere intersection algorithm deduction</h2>
+<p><span class="math display">\[||\vec{X} - \vec{C}||^2 = r^2\]</span></p>
+<p><span class="math display">\[(\vec{X} - \vec{C})\cdot(\vec{X} - \vec{C}) = r^2 \]</span> <span class="math display">\[(t\vec{\omega} + \vec{P} - \vec{C})\cdot(t\vec{\omega} + \vec{P} - \vec{C}) = r^2\]</span></p>
+<p><span class="math display">\[\small{ t^2(\vec{\omega}\cdot\vec{\omega})+2t(\vec{\omega}\cdot(\vec{P}-\vec{C}))+((\vec{P}-\vec{C})\cdot(\vec{P}-\vec{C}))-r^2=0 }\]</span></p>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm" class="slide level2">
+<h2>Möller-Trumbore algorithm</h2>
+<figure>
+<img data-src="img/unit-triangle.jpg" class="r-stretch" height="300" alt="From: [3]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[3]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-ray-definition" class="slide level2">
+<h2>Möller-Trumbore algorithm: ray definition</h2>
+<p>From ray definition: <span class="math display">\[X = P+t\vec{\omega}\]</span></p>
+<p>From barycentric coordinates: <span class="math display">\[X = (1 - u - v)V_0 + uV_1 + vV_2\]</span></p>
+<p><span class="math display">\[P+t\vec{\omega} = (1 - u - v)V_0 + uV_1 + vV_2\]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-linear-equations" class="slide level2">
+<h2>Möller-Trumbore algorithm: linear equations</h2>
+<p><span class="math display">\[[-\vec{\omega}, V_1-V_0, V_2-V_0]\begin{bmatrix}
+t \\ u \\ v
+\end{bmatrix}  = P - V_0\]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-cramers-rule" class="slide level2">
+<h2>Möller-Trumbore algorithm: Cramer’s rule</h2>
+<p><span class="math inline">\(\vec{E_1} = V_1-V_0\)</span>, <span class="math inline">\(\vec{E_2} = V_2-V_0\)</span>, <span class="math inline">\(\vec{T} = P-V_0\)</span></p>
+<p><span class="math display">\[\begin{bmatrix}
+t \\ u \\ v
+\end{bmatrix}
+= \frac{1}{|-\vec{\omega}, \vec{E_1}, \vec{E_2}|}
+\begin{bmatrix}
+|\vec{T} , \vec{E_1}, \vec{E_2}| \\
+|-\vec{\omega}, \vec{T} , \vec{E_2}| \\
+|-\vec{\omega}, \vec{E_1}, \vec{T}|
+\end{bmatrix}\]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="möller-trumbore-algorithm-triple-product" class="slide level2">
+<h2>Möller-Trumbore algorithm: Triple product</h2>
+<p><span class="math inline">\(|\vec{A}, \vec{B}, \vec{C}| = - (\vec{A}\times\vec{C})\cdot\vec{B} = - (\vec{C}\times\vec{B})\cdot\vec{A}\)</span></p>
+<p><span class="math display">\[\begin{bmatrix}
+t \\ u \\ v
+\end{bmatrix}
+= \frac{1}{(\vec{\omega}\times \vec{E_2}) \cdot \vec{E_1} }
+\begin{bmatrix}
+(\vec{T}  \times \vec{E_1}) \cdot \vec{E_2}  \\
+(\vec{\omega} \times \vec{E_2}) \cdot \vec{T}  \\
+(\vec{T} \times \vec{E_1}) \cdot \vec{\omega}
+\end{bmatrix}\]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="lab-ray-triangle-intersection" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: Ray triangle intersection</h2>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-DXRtutorial" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Lefrançois M.-K., Gautron P. DX12 raytracing tutorial - part 2 [Electronic resource]. URL: <a href="https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2">https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2</a>.</div>
+</div>
+<div id="ref-optix" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Parker S.G. et al. OptiX: A general purpose ray tracing engine // ACM SIGGRAPH 2010 papers. New York, NY, USA: Association for Computing Machinery, 2010.</div>
+</div>
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-Shirley_ray_tracing" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Shirley P. Ray tracing in one weekend. second. Amazon.com Services LLC, 2019. Vol. 1.</div>
+</div>
+<div id="ref-Moller_algorithm" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Möller T., Trumbore B. Fast, minimum storage ray-triangle intersection // J. Graph. Tools. USA: A. K. Peters, Ltd., 1997. Vol. 2, № 1. P. 21–28.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
