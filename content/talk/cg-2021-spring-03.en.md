@@ -1,5 +1,5 @@
 +++
-publishDate = 2021-02-18T19:55:20+03:00
+publishDate = 2021-02-18T17:55:20+03:00
 title = "Basics DirectX 12"
 date = 2021-02-19T09:00:00
 date_end = 2021-02-20T12:10:00
