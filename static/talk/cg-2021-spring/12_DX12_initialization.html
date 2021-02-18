@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 12: DX12 initialization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 12: DX12 initialization</h1>
+  <p class="subtitle">Computer graphics in Game development</p>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">19.02.2021</p>
+</section>
+
+<section id="validation-layer" class="slide level2">
+<h2>Validation layer</h2>
+<p>To engage API validation:</p>
+<ol type="1">
+<li>Call <code>D3D12GetDebugInterface</code> function to get debug controller</li>
+<li>Call <code>EnableDebugLayer</code> method of the debug controller</li>
+<li>Use <code>DXGI_CREATE_FACTORY_DEBUG</code> flag in further DXGI factory creation <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ol>
+<!-- slide -->
+</section>
+<section id="hardware-adapter" class="slide level2">
+<h2>Hardware adapter</h2>
+<ul>
+<li>Use <code>CreateDXGIFactory*</code> function to create a DXGI factory (don’t forget about flags)</li>
+<li>Call <code>EnumAdapters*</code> method to find HW</li>
+<li><code>EnumAdapters</code> for adapter #0 gives us a pointer to the primary display adapter <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="device-and-command-queue" class="slide level2">
+<h2>Device and command queue</h2>
+<ul>
+<li>Call <code>D3D12CreateDevice</code> function to create a DX12 device</li>
+<li>Make sure that minimum future level is D3D_FEATURE_LEVEL_<strong>11</strong>_0</li>
+<li>Call <code>CreateCommandQueue</code> method of DX12 device to create a direct queue <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="swap-chain" class="slide level2">
+<h2>Swap chain</h2>
+<ul>
+<li>Call <code>CreateSwapChainForHwnd</code> method of the DXGI factory with <strong>Direct queue</strong>, window handler and swap chain descriptor</li>
+<li>Call <code>MakeWindowAssociation</code> method of the DXGI factory with window handler and <code>DXGI_MWA_NO_ALT_ENTER</code></li>
+<li>Cast the swap chain pointer to required COM interface <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="lab-load_pipeline-init-dx12-and-swap-chain" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: load_pipeline: init DX12 and swap chain</h2>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-programming_guide_2019" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M. et al. Direct3D 12 programming guide [Electronic resource]. 2019. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide">https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

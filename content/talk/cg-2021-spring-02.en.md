@@ -7,7 +7,7 @@ date_end = 2021-02-06T12:10:00
 # abstract_short = ""
 event = "Course \"Computer graphics in game development\""
 # event_url = "http://magistr.mephi.ru/school/"
-location = "Innopolis university, 312"
+location = "Innopolis university, 313"
 [address]
   street = "1, Universitetskaya Str."
   city = "Innopolis"
