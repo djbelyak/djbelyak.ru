@@ -26,4 +26,4 @@ url_video = ""
 - [Lecture 17: Copy of resources](https://djbelyak.ru/talk/cg-2021-spring/17_Copy_of_resources.html)
 - [Lecture 18: Index buffer](https://djbelyak.ru/talk/cg-2021-spring/18_Index_buffer.html)
 - [Lecture 19: Textures](https://djbelyak.ru/talk/cg-2021-spring/19_Textures.html)
-- [Lecture 20: Per frame updates](https://djbelyak.ru/talk/cg-2021-spring/20_Next_steps.html)
+- [Lecture 20: Next steps in computer graphics](https://djbelyak.ru/talk/cg-2021-spring/20_Next_steps.html)
