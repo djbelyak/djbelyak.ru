@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 13: Resources in DX12</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 13: Resources in DX12</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">18.02.2022</p>
+</section>
+
+<section id="resource" class="slide level2">
+<h2>Resource</h2>
+<p>Resource is any data in memory</p>
+<ul>
+<li>Vertex buffer</li>
+<li>Index buffer</li>
+<li>Constant buffer</li>
+<li>Texture</li>
+<li>Depth/Stencil buffer <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="type-of-resources" class="slide level2">
+<h2>Type of resources</h2>
+<ul>
+<li>Committed</li>
+<li>Placed</li>
+<li>Reserved <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="resource-heap-types" class="slide level2">
+<h2>Resource heap types</h2>
+<ul>
+<li>Default - no CPU access</li>
+<li>Upload - CPU can write</li>
+<li>Readback - CPU can read <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="lab-load_assets-vertex-buffer-and-constant-buffer" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: load_assets: vertex buffer and constant buffer</h2>
+<!-- slide -->
+</section>
+<section id="resource-descriptors" class="slide level2">
+<h2>Resource descriptors</h2>
+<p>Resource descriptor is a properties of the particular resource.</p>
+<ul>
+<li>CreateConstantBufferView</li>
+<li>CreateDepthStencilView</li>
+<li>CreateRenderTargetView</li>
+<li>CreateShaderResourceView</li>
+<li>CreateUnorderedAccessView <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="descriptor-heaps" class="slide level2">
+<h2>Descriptor heaps</h2>
+<p>Descriptors heaps hold resource descriptors.</p>
+<p>Types of descriptor heaps:</p>
+<ul>
+<li>CBV, SRV, and UAV</li>
+<li>SAMPLER</li>
+<li>RTV</li>
+<li>DSV <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="lab-load_pipeline-descriptor-heaps" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: load_pipeline: descriptor heaps</h2>
+</section>
+<section id="resource-barriers" class="slide level2">
+<h2>Resource barriers</h2>
+<p>In DX12 the application is managing all resource states:</p>
+<ul>
+<li>D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER</li>
+<li>D3D12_RESOURCE_STATE_RENDER_TARGET</li>
+<li>D3D12_RESOURCE_STATE_DEPTH_WRITE</li>
+<li>D3D12_RESOURCE_STATE_DEPTH_READ</li>
+<li>D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE</li>
+<li>D3D12_RESOURCE_STATE_COPY_DEST</li>
+<li>D3D12_RESOURCE_STATE_COPY_SOURCE</li>
+<li>D3D12_RESOURCE_STATE_PRESENT and others <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-programming_guide_2019" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M. et al. Direct3D 12 programming guide [Electronic resource]. 2019. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide">https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

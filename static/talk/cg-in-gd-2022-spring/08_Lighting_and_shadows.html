@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 08: Lighting and shadows</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 08: Lighting and shadows</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">05.02.2022</p>
+</section>
+
+<section id="rendering-equation" class="slide level2">
+<h2>Rendering equation</h2>
+<p><span class="math display">\[\scriptsize{L_o(X, \vec{\omega_o}) = L_e(X, \vec{\omega_o}) + \int_S L_i(X, \vec{\omega_i}) f_{X,\vec{n}}(\vec{\omega_i}, \vec{\omega_o}) |\vec{\omega_i} \cdot \vec{n} | d{\omega_i}} \]</span></p>
+<p>where <span class="math inline">\(X\)</span> is a position on the object or surface,</p>
+<p><span class="math inline">\(\vec{\omega_o}\)</span> is a direction toward the eye or camera,</p>
+<p><span class="math inline">\(L_o(X, \vec{\omega_o})\)</span> is all outgoing light from the position,</p>
+<p><span class="math inline">\(L_e(X, \vec{\omega_o})\)</span> is emitted light <span class="citation" data-cites="rendering_equation">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="rendering-equation-1" class="slide level2">
+<h2>Rendering equation</h2>
+<p><span class="math display">\[\scriptsize{L_o(X, \vec{\omega_o}) = L_e(X, \vec{\omega_o}) + \int_S L_i(X, \vec{\omega_i}) f_{X,\vec{n}}(\vec{\omega_i}, \vec{\omega_o}) |\vec{\omega_i} \cdot \vec{n} | d{\omega_i}} \]</span></p>
+<p>where <span class="math inline">\(\vec{n}\)</span> is normal to surface at <span class="math inline">\(X\)</span> position,</p>
+<p><span class="math inline">\(S\)</span> is a unit hemisphere among <span class="math inline">\(\vec{n}\)</span> with center in <span class="math inline">\(X\)</span>,</p>
+<p><span class="math inline">\(L_i(X, \vec{\omega_i})\)</span> is a light coming from <span class="math inline">\(\vec{\omega_i}\)</span> direction,</p>
+<p><span class="math inline">\(f_{X,\vec{n}}(\vec{\omega_i}, \vec{\omega_o})\)</span> is the bidirectional reflectance distribution function (BRDF) <span class="citation" data-cites="rendering_equation">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="bidirectional-reflectance-distribution-function" class="slide level2">
+<h2>Bidirectional reflectance distribution function</h2>
+<figure>
+<img data-src="img/brdf_example.jpg" class="r-stretch" height="300" alt="From: [2]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="gpu_gems">[2]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="phong-shading" class="slide level2">
+<h2>Phong shading</h2>
+<p><span class="math display">\[\small{L(\vec{P}) = Ka + \sum_{lights}{[Kd\vec{N} \cdot \vec{L} + Ks(\vec{V} \cdot \vec{R})^{Ns}]}}\]</span></p>
+<p>where <span class="math inline">\(\small{\vec{R} = 2(\vec{N} \cdot \vec{L})\vec{N}−\vec{L}}\)</span> <span class="citation" data-cites="Phong">[3]</span></p>
+<figure>
+<img data-src="img/Phong.png" class="r-stretch" height="200" alt="From: https://upload.wikimedia.org/wikipedia/commons/6/6b/Phong_components_version_4.png" /><figcaption aria-hidden="true">From: <a href="https://upload.wikimedia.org/wikipedia/commons/6/6b/Phong_components_version_4.png" class="uri">https://upload.wikimedia.org/wikipedia/commons/6/6b/Phong_components_version_4.png</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="lambertian-shading" class="slide level2">
+<h2>Lambertian shading</h2>
+<p><span class="math display">\[L_d = k_dImax(0, \vec{n}\cdot\vec{l})\]</span></p>
+<p>where <span class="math inline">\(L_d\)</span> - diffusely reflected light,</p>
+<p><span class="math inline">\(k_d\)</span> - material’s diffuse coefficient,</p>
+<p><span class="math inline">\(\vec{n}\)</span> - surface normal,</p>
+<p><span class="math inline">\(\vec{l}\)</span> - direction toward the light <span class="citation" data-cites="McGuire_graphics_codex">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="lab-lambertian-shading" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: Lambertian shading</h2>
+<!-- slide -->
+</section>
+<section id="shadow-rays" class="slide level2">
+<h2>Shadow rays</h2>
+<figure>
+<img data-src="img/shadow_rays_scheme.png" class="r-stretch" height="400" alt="From: https://www.researchgate.net/figure/1-This-figure-demonstrates-the-concept-of-ray-tracing-A-ray-is-cast-from-the-camera_fig1_236342499" /><figcaption aria-hidden="true">From: <a href="https://www.researchgate.net/figure/1-This-figure-demonstrates-the-concept-of-ray-tracing-A-ray-is-cast-from-the-camera_fig1_236342499" class="uri">https://www.researchgate.net/figure/1-This-figure-demonstrates-the-concept-of-ray-tracing-A-ray-is-cast-from-the-camera_fig1_236342499</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="lab-shadow-rays" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: Shadow rays</h2>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-rendering_equation" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Kajiya J.T. The rendering equation // SIGGRAPH Comput. Graph. New York, NY, USA: Association for Computing Machinery, 1986. Vol. 20, № 4. P. 143–150.</div>
+</div>
+<div id="ref-gpu_gems" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Fernando R. GPU gems: Programming techniques, tips and tricks for real-time graphics. Pearson Higher Education, 2004.</div>
+</div>
+<div id="ref-Phong" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Phong B.T. Illumination for computer generated pictures // Commun. ACM. New York, NY, USA: Association for Computing Machinery, 1975. Vol. 18, № 6. P. 311–317.</div>
+</div>
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

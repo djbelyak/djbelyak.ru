@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 06: What is the ray tracing. Camera rays</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 06: What is the ray tracing. Camera rays</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">04.02.2022</p>
+</section>
+
+<section id="cornell-box" class="slide level2">
+<h2>Cornell box</h2>
+<h3 id="original-vs-rasterizer">Original vs rasterizer</h3>
+<p><img data-src="img/cornell_box.jpg" class="r-stretch" height="350" alt="Original" /> <img data-src="img/rasterizer_cornell_box.png" class="r-stretch" height="350" alt="Rasterizer result" /></p>
+<!-- slide -->
+</section>
+<section id="waveparticle-duality-of-light" class="slide level2">
+<h2>Wave–particle duality of light</h2>
+<figure>
+<img data-src="img/wave_particle_duality.png" class="r-stretch" height="350" alt="From: https://me.me/i/light-s-olar-system-wave-particle-duality-intesifies-5a1956376a2d4ceab14afca19bae5409" /><figcaption aria-hidden="true">From: <a href="https://me.me/i/light-s-olar-system-wave-particle-duality-intesifies-5a1956376a2d4ceab14afca19bae5409" class="uri">https://me.me/i/light-s-olar-system-wave-particle-duality-intesifies-5a1956376a2d4ceab14afca19bae5409</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="mathematical-definition-of-ray" class="slide level2">
+<h2>Mathematical definition of ray</h2>
+<p><span class="math display">\[ray(t)=\vec{origin}+t*\hat{direction}\]</span></p>
+<p><span class="math display">\[t&gt;0\]</span></p>
+<!-- slide -->
+</section>
+<section id="turner-whitted-demo-1979" class="slide level2">
+<h2>Turner Whitted demo (1979)</h2>
+<figure>
+<img data-src="img/whitted.jpg.webp" class="r-stretch" height="400" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="Whitted">[1]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="ray-tracing-idea" class="slide level2">
+<h2>Ray tracing idea</h2>
+<figure>
+<img data-src="img/rt_idea.jpg" class="r-stretch" height="400" alt="From: [2]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[2]</span></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="recall-rasterization-pipeline" class="slide level2">
+<h2>Recall: rasterization pipeline</h2>
+<figure>
+<img data-src="img/pipeline-dx11.png" class="r-stretch" height="400" alt="From: https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" /><figcaption aria-hidden="true">From: <a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" class="uri">https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="raytracing-pipeline" class="slide level2">
+<h2>Raytracing pipeline</h2>
+<p><img data-src="img/ShaderPipeline.svg" class="r-stretch" height="400" alt="From: [3]" /><span class="citation" data-cites="optix">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="ray-generation" class="slide level2">
+<h2>Ray generation</h2>
+<p><strong>Ray generation</strong> method generates primary rays (camera rays) and call <strong>Trace ray</strong> to evaluate the final color of each trace.</p>
+<!-- slide -->
+</section>
+<section id="dürers-door" class="slide level2">
+<h2>Dürer’s door</h2>
+<figure>
+<img data-src="img/Durer_-_Man_Drawing_a_Lute.jpg" class="r-stretch" height="400" alt="From: https://en.wikipedia.org/wiki/Ray_tracing_(graphics)#/media/File:D%C3%BCrer_-_Man_Drawing_a_Lute.jpg" /><figcaption aria-hidden="true">From: <a href="https://en.wikipedia.org/wiki/Ray_tracing_(graphics)#/media/File:D%C3%BCrer_-_Man_Drawing_a_Lute.jpg" class="uri">https://en.wikipedia.org/wiki/Ray_tracing_(graphics)#/media/File:D%C3%BCrer_-_Man_Drawing_a_Lute.jpg</a></figcaption>
+</figure>
+<p>by Albrecht Dürer from 1525 shows the use of a Dürer’s door</p>
+<!-- slide -->
+</section>
+<section id="pinehole-camera" class="slide level2">
+<h2>Pinehole camera</h2>
+<figure>
+<img data-src="img/Pinhole-camera.png" class="r-stretch" height="400" alt="From: http://commons.wikimedia.org/wiki/Image:Pinhole-camera.png" /><figcaption aria-hidden="true">From: <a href="http://commons.wikimedia.org/wiki/Image:Pinhole-camera.png" class="uri">http://commons.wikimedia.org/wiki/Image:Pinhole-camera.png</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="camera-ray-casting" class="slide level2">
+<h2>Camera ray-casting</h2>
+<figure>
+<img data-src="img/camera_ray_generation.svg" class="r-stretch" height="400" alt="Ray casting from position, direction, right and up vectors" /><figcaption aria-hidden="true">Ray casting from position, direction, right and up vectors</figcaption>
+</figure>
+<p><span class="citation" data-cites="Shirley_ray_tracing">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="miss-shader" class="slide level2">
+<h2>Miss shader</h2>
+<p>Miss shader is called when <strong>Trace ray</strong> haven’t found any intersection</p>
+<p><img data-src="img/ShaderPipeline.svg" class="r-stretch" height="400" alt="From: [3]" /><span class="citation" data-cites="optix">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="default-scene" class="slide level2">
+<h2>Default scene</h2>
+<p>Miss sharer is used to generate a scene without geometry. Could be pure color, sky, terrain, etc</p>
+<iframe width="640" height="360" frameborder="0" src="https://www.shadertoy.com/embed/4sKGWt?gui=true&amp;t=10&amp;paused=true&amp;muted=false" allowfullscreen>
+</iframe>
+<p>by Morgan McGuire</p>
+<!-- slide -->
+</section>
+<section id="lab-ray-generation.-miss-shader" class="slide level2">
+<h2>Lab: Ray generation. Miss shader</h2>
+<ol type="1">
+<li>Implement <code>set_render_target</code>, <code>set_viewport</code>, <code>clear_render_target</code>, and <code>ray_generation</code> methods of <code>cg::renderer::raytracer</code> class</li>
+<li>Add <code>render_target</code> and <code>camera</code> in <code>cg::renderer::ray_tracing_renderer</code> class</li>
+<li>Define <code>miss_shader</code> of <code>ray_tracer</code></li>
+<li>Implement image clearing, calling <code>ray_generation</code>, and saving in <code>cg::renderer::ray_tracing_renderer</code> class</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-Whitted" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Whitted T. An improved illumination model for shaded display. // Commun. ACM. 1980. Vol. 23, № 6. P. 343–349.</div>
+</div>
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-DXRtutorial" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Lefrançois M.-K., Gautron P. DX12 raytracing tutorial - part 2 [Electronic resource]. URL: <a href="https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2">https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2</a>.</div>
+</div>
+<div id="ref-optix" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Parker S.G. et al. OptiX: A general purpose ray tracing engine // ACM SIGGRAPH 2010 papers. New York, NY, USA: Association for Computing Machinery, 2010.</div>
+</div>
+<div id="ref-Shirley_ray_tracing" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Shirley P. Ray tracing in one weekend. second. Amazon.com Services LLC, 2019. Vol. 1.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

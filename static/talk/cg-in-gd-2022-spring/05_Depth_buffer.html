@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 05: Depth buffer</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 05: Depth buffer</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">22.01.2022</p>
+</section>
+
+<section id="rendering-pipeline" class="slide level2">
+<h2>Rendering pipeline</h2>
+<p><img data-src="img\rendering_pipeline_v5.png" /></p>
+<!--slide -->
+</section>
+<section id="z-test-inspiration" class="slide level2">
+<h2>Z-test inspiration</h2>
+<figure>
+<img data-src="img\redko.jpg" class="r-stretch" height="400" alt="Kliment Redko. Suprematism" /><figcaption aria-hidden="true">Kliment Redko. Suprematism</figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="experiment-with-z_test.obj" class="slide level2">
+<h2>Experiment with z_test.obj</h2>
+<figure>
+<img data-src="img\expected_z_test.png" class="r-stretch" height="300" alt="Expected" /><figcaption aria-hidden="true">Expected</figcaption>
+</figure>
+<figure>
+<img data-src="img\current_z_test.png" class="r-stretch" height="300" alt="Actual" /><figcaption aria-hidden="true">Actual</figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="the-issue" class="slide level2">
+<h2>The issue</h2>
+<p>The renderer doesn’t take into account which the triangle is closer to the camera and renders the triangle on top of the previous one <span class="citation" data-cites="outputmergerstage">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="depth-buffer" class="slide level2">
+<h2>Depth buffer</h2>
+<p>For rasterization we are using <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> only. Let’s store <span class="math inline">\(z\)</span> coordinate of pixel to separated buffer. This buffer is called depth buffer (or z-buffer) <span class="citation" data-cites="Shirley_book">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="depth-test" class="slide level2">
+<h2>Depth test</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> DepthTest(<span class="dt">unsigned</span> <span class="dt">short</span> x, <span class="dt">unsigned</span> <span class="dt">short</span> y, <span class="dt">float</span> z)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z &lt; depth_buffer(x, y)]; <span class="co">//Depends on Z-axis directions</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> SetPixel(<span class="dt">unsigned</span> <span class="dt">short</span> x, <span class="dt">unsigned</span> <span class="dt">short</span> y, <span class="dt">float</span> z,)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">auto</span> color = pixel_shader(attributes);</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (DepthTest(x, y, z))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        frame_buffer(x, y) = color;</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        depth_buffer(x, y) = z;</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><span class="citation" data-cites="Shirley_book">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="late-z-test" class="slide level2">
+<h2>Late-Z test</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">auto</span> color = pixel_shader(attributes);</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (DepthTest(x, y, z))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    frame_buffer(x, y) = color;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    depth_buffer(x, y) = z;</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><span class="citation" data-cites="Luna12">[3]</span></p>
+<!-- slide -->
+</section>
+<section id="early-z" class="slide level2">
+<h2>Early-Z</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (DepthTest(x, y, z))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    frame_buffer(x, y) = pixel_shader(attributes);</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    depth_buffer(x, y) = z;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><span class="citation" data-cites="Luna12">[3]</span></p>
+<!-- slide -->
+</section>
+<section id="lab-depth-buffer" class="slide level2">
+<h2>Lab: Depth buffer</h2>
+<ol type="1">
+<li>Adjust <code>set_render_target</code>, and <code>clear_render_target</code> methods of <code>cg::renderer::rasterizer</code> class to consume a depth buffer</li>
+<li>Add depth buffer in <code>cg::renderer::rasterization_renderer</code></li>
+<li>Implement <code>depth_test</code> function of <code>cg::renderer::rasterizer</code> class</li>
+<li>Add <code>Depth test</code> stage to <code>draw</code> method of <code>cg::renderer::rasterizer</code></li>
+</ol>
+<!-- slide-->
+</section>
+<section id="homework" class="slide level2">
+<h2>Homework</h2>
+<ol type="1">
+<li>Make a Github repo from the template</li>
+<li>Implement rasterization labs</li>
+<li>Mark your final commit with <code>rasterizetion</code> tag</li>
+<li>Push your implementation and the <code>rasterizetion</code> tag</li>
+<li>Make sure that an instructor has access to your repo (<a href="https://github.com/djbelyak/">djbelyak</a> on github)</li>
+<li>Submit your implementation in Moodle with the repo URL</li>
+</ol>
+<p><strong>Due date</strong>: Friday, 4 February 2022, 12:00 AM</p>
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-outputmergerstage" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M. et al. Output-merger stage [Electronic resource]. 2021. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-output-merger-stage">https://docs.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-output-merger-stage</a>.</div>
+</div>
+<div id="ref-Shirley_book" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Marschner S., Shirley P. Fundamentals of computer graphics, fourth edition. 4th ed. Natick, MA, USA: A. K. Peters, Ltd., 2016.</div>
+</div>
+<div id="ref-Luna12" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Luna F. Introduction to 3D game programming with DirectX 12. Dulles, VA, USA: Mercury Learning &amp; Information, 2016.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

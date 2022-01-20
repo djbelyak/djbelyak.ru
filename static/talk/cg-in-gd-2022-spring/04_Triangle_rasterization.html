@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 04: Triangle rasterization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 04: Triangle rasterization</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">22.01.2022</p>
+</section>
+
+<section id="rendering-pipeline" class="slide level2">
+<h2>Rendering pipeline</h2>
+<p><img data-src="img\rendering_pipeline_v4.png" /></p>
+<!-- slide -->
+</section>
+<section id="rasterization" class="slide level2">
+<h2>Rasterization</h2>
+<p>After vertex shader stage we have an NDC coordinates of each vertex of the triangle.</p>
+<p>Next steps:</p>
+<ul>
+<li>Convert NDC to screen space coordinates</li>
+<li>Find the triangle bounding rectangle</li>
+<li>Clip the triangle to screen space size</li>
+<li>For each pixel inside the bounding rectangle decide which pixel inside the triangle or not</li>
+<li>For each pixel inside the triangle compute a color with a pixel shader <span class="citation" data-cites="satranmichaeljacobsmike2019">[1]</span></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="convert-ndc-to-screen-space-coordinates" class="slide level2">
+<h2>Convert NDC to screen space coordinates</h2>
+<p>Could be done in homogeneous coordinates or cartesian</p>
+<p><span class="math display">\[M_{ss} = \left[\begin{array}{cccc}
+    width &amp; 0 &amp; 0 &amp; 0 \\
+    0 &amp; - height &amp; 0 &amp; 0 \\
+    0 &amp; 0 &amp; 1 &amp; 0 \\
+    x &amp; height + y &amp; 0 &amp; 1
+    \end{array}\right]\]</span></p>
+<p>where <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are offsets from the screen space <span class="math inline">\((0, 0)\)</span> <span class="citation" data-cites="satranmichaeljacobsmike2019">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="bounding-rectangle" class="slide level2">
+<h2>Bounding rectangle</h2>
+<p><img data-src="img/bounding_rect.png" /></p>
+<!-- slide -->
+</section>
+<section id="how-to-find-whether-the-pixel-is-inside-the-triangle---edge-function" class="slide level2">
+<h2>How to find whether the pixel is inside the triangle - Edge function</h2>
+<p>Let’s take two points <span class="math inline">\((X, Y)\)</span> and <span class="math inline">\((X+dx, Y+dy)\)</span> on an edge</p>
+<p>Then, define an edge function:</p>
+<p><span class="math display">\[E(x, y) = (x - X)dy - (y - Y)dx\]</span></p>
+<p><span class="citation" data-cites="pineda1988parallel">[2]</span> <!-- slide --></p>
+</section>
+<section id="edge-function-values" class="slide level2">
+<h2>Edge function values</h2>
+<p>If <span class="math inline">\(E(x, y)&gt;0\)</span> then <span class="math inline">\((x, y)\)</span> on the “right” side</p>
+<p>If <span class="math inline">\(E(x, y)&lt;0\)</span> then <span class="math inline">\((x, y)\)</span> on the “left” side</p>
+<p>If <span class="math inline">\(E(x, y)=0\)</span> then <span class="math inline">\((x, y)\)</span> on the edge</p>
+<p><span class="citation" data-cites="pineda1988parallel">[2]</span> <!-- slide --></p>
+</section>
+<section id="edge-function-view" class="slide level2">
+<h2>Edge function view</h2>
+<p><img data-src="img/edge_function.png" class="r-stretch" height="400" alt="From: https://www.cs.drexel.edu/~david/Classes/Papers/comp175-06-pineda.pdf" /> <span class="citation" data-cites="pineda1988parallel">[2]</span> <!-- slide --></p>
+</section>
+<section id="clockwise-vs-counter-clockwise" class="slide level2">
+<h2>Clockwise vs counter-clockwise</h2>
+<p><img data-src="img/cw_ccw.png" class="r-stretch" height="400" alt="From: https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage" /> <span class="citation" data-cites="scratchapixel_rasterization">[3]</span></p>
+<!-- slide -->
+</section>
+<section id="another-meaning-of-the-edge-function" class="slide level2">
+<h2>Another meaning of the edge function</h2>
+<p>Lets compare <span class="math display">\[E(x, y) = (x - X)dy - (y - Y)dx\]</span></p>
+<p>and <span class="math display">\[(u_1, u_2, 0) \times (v_1, v_2, 0) = (0, 0, u_1v_1-u_2v_1)\]</span></p>
+<p>The edge function value is a twice area of the triangle</p>
+<!-- slide -->
+</section>
+<section id="barycentric-coordinates" class="slide level2">
+<h2>Barycentric coordinates</h2>
+<p>Let <span class="math inline">\(u = \frac{S_{CAP}}{S_{ABC}}\)</span>, <span class="math inline">\(v = \frac{S_{BCP}}{S_{ABC}}\)</span>, <span class="math inline">\(w = \frac{S_{ABP}}{S_{ABC}}\)</span></p>
+<p>Therefore, <span class="math inline">\(u+v+w=1\)</span>, and <span class="math inline">\(P=uA+vB+wC\)</span>. The barycentric could be used for attribute interpolation <span class="citation" data-cites="scratchapixel_rendering_a_triangle">[4]</span></p>
+<figure>
+<img data-src="img/barycentric.png" class="r-stretch" height="300" alt="From: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates" /><figcaption aria-hidden="true">From: <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates" class="uri">https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates</a></figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="pixel-shader" class="slide level2">
+<h2>Pixel shader</h2>
+<p><strong>Input</strong>: interpolated vertex attributes</p>
+<p><strong>Output</strong>: result pixel color</p>
+<p>The pixel shader should be provided by graphics programmer <span class="citation" data-cites="pixelshaderstage">[5]</span></p>
+<!-- slide -->
+</section>
+<section id="lab-triangle-rasterization" class="slide level2">
+<h2>Lab: Triangle rasterization</h2>
+<ol type="1">
+<li>Implement <code>cg::renderer::rasterizer::edge_function</code> method</li>
+<li>Implement <code>pixel_shader</code> lambda for the instance of <code>cg::renderer::rasterizer</code></li>
+<li>Add <code>Rasterization</code> and <code>Pixel shader</code> stages to <code>draw</code> method of <code>cg::renderer::rasterizer</code></li>
+<li>Make sure that you are getting correct image as a result</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="references" class="slide level2 unnumbered allowframebreaks">
+<h2 class="unnumbered allowframebreaks">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-satranmichaeljacobsmike2019" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M., Jacobs M. The Direct3D transformation pipeline [Electronic resource]. 2019. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/dxtecharts/the-direct3d-transformation-pipeline">https://docs.microsoft.com/en-us/windows/win32/dxtecharts/the-direct3d-transformation-pipeline</a>.</div>
+</div>
+<div id="ref-pineda1988parallel" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Pineda J. A parallel algorithm for polygon rasterization // Proceedings of the 15th annual conference on computer graphics and interactive techniques. 1988. P. 17–20.</div>
+</div>
+<div id="ref-scratchapixel_rasterization" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Rasterization: A practical implementation [Electronic resource]. 2015. URL: <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage">https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage</a>.</div>
+</div>
+<div id="ref-scratchapixel_rendering_a_triangle" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Ray tracing: Rendering a triangle [Electronic resource]. 2014. URL: <a href="https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates">https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates</a>.</div>
+</div>
+<div id="ref-pixelshaderstage" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Satran M. et al. Pixel shader stage [Electronic resource]. 2020. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d11/pixel-shader-stage">https://docs.microsoft.com/en-us/windows/win32/direct3d11/pixel-shader-stage</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

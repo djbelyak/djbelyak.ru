@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 10: Anti-aliasing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 10: Anti-aliasing</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">05.02.2022</p>
+</section>
+
+<section id="kotelnikov-theorem" class="slide level2">
+<h2>Kotelnikov theorem</h2>
+<p>If a function <span class="math inline">\(x(t)\)</span> contains no frequencies higher than <span class="math inline">\(B\)</span> hertz, it is completely determined by giving its ordinates at a series of points spaced <span class="math inline">\(1/2B\)</span> seconds apart. <span class="citation" data-cites="Kotelnikov">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="super-sampling-anti-aliasing" class="slide level2">
+<h2>Super-sampling anti-aliasing</h2>
+<ol type="1">
+<li>Trace 4 uniform rays per pixel</li>
+<li>Blend resulted colors <span class="citation" data-cites="Shirley_ray_tracing">[2]</span></li>
+</ol>
+<!-- slide -->
+</section>
+<section id="temporal-anti-aliasing" class="slide level2">
+<h2>Temporal anti-aliasing</h2>
+<ol type="1">
+<li><strong>Render scene with subpixel jitter</strong></li>
+<li>Reproject the pixel to world-space using depth buffer</li>
+<li>Use world space to find previous screen space position</li>
+<li>Offset previous position using motion vectors</li>
+<li>Use this to look up the previous color</li>
+<li><strong>Blend resulting colors with the previous result</strong><span class="citation" data-cites="taa">[3]</span></li>
+</ol>
+<!-- slide -->
+</section>
+<section id="lab-anti-aliasing" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Lab: Anti-aliasing</h2>
+<!-- slide-->
+</section>
+<section id="homework" class="slide level2">
+<h2>Homework</h2>
+<ol type="1">
+<li>Implement ray tracing labs</li>
+<li>Commit&amp;push your implementation</li>
+<li>Make sure that the teacher has access to your repo (<a href="https://github.com/djbelyak/">djbelyak</a>)</li>
+<li>Point the repo’s URL and tag (branch, or commit hash) in Moodle</li>
+</ol>
+<p><strong>Due date</strong>: Friday, 18 February 2022, 12:00 AM <!-- slide--></p>
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-Kotelnikov" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Kotel’nikov V.A. On the transmission capacity of ’ether’ and wire in electric communications // Usp. Fiz. Nauk. Uspekhi Fizicheskikh Nauk, 2006. Vol. 176, № 7. P. 762–770.</div>
+</div>
+<div id="ref-Shirley_ray_tracing" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Shirley P. Ray tracing in one weekend. second. Amazon.com Services LLC, 2019. Vol. 1.</div>
+</div>
+<div id="ref-taa" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Karis B. High quality temporal anti-aliasing [Electronic resource]. 2014. URL: <a href="https://de45xmedrsdbp.cloudfront.net/Resources/files/TemporalAA_small-59732822.pdf">https://de45xmedrsdbp.cloudfront.net/Resources/files/TemporalAA_small-59732822.pdf</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
