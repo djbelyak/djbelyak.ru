@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Ivan Belyavtsev">
-  <title>Lecture 07: Ray intersection algorithms</title>
+  <title>Lecture 07: Ray intersection</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -44,7 +44,7 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Lecture 07: Ray intersection algorithms</h1>
+  <h1 class="title">Lecture 07: Ray intersection</h1>
   <h3 class="subtitle">Computer graphics in Game development</h3>
 <img class="r-stretch" data-src="img/innopolis_logo.png"/>
   <p class="author">Ivan Belyavtsev</p>
@@ -59,21 +59,6 @@
 </figure>
 <!-- slide -->
 </section>
-<section id="sphere-intersection-algorithm" class="slide level2">
-<h2>Sphere intersection algorithm</h2>
-<figure>
-<img data-src="img/sphere-intersect.jpg" class="r-stretch" height="300" alt="From: [3]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire_graphics_codex">[3]</span></figcaption>
-</figure>
-<p><span class="citation" data-cites="McGuire_graphics_codex">[3]</span>, <span class="citation" data-cites="Shirley_ray_tracing">[4]</span></p>
-<!-- slide -->
-</section>
-<section id="sphere-intersection-algorithm-deduction" class="slide level2">
-<h2>Sphere intersection algorithm deduction</h2>
-<p><span class="math display">\[||\vec{X} - \vec{C}||^2 = r^2\]</span></p>
-<p><span class="math display">\[(\vec{X} - \vec{C})\cdot(\vec{X} - \vec{C}) = r^2 \]</span> <span class="math display">\[(t\vec{\omega} + \vec{P} - \vec{C})\cdot(t\vec{\omega} + \vec{P} - \vec{C}) = r^2\]</span></p>
-<p><span class="math display">\[\small{ t^2(\vec{\omega}\cdot\vec{\omega})+2t(\vec{\omega}\cdot(\vec{P}-\vec{C}))+((\vec{P}-\vec{C})\cdot(\vec{P}-\vec{C}))-r^2=0 }\]</span></p>
-<!-- slide -->
-</section>
 <section id="möller-trumbore-algorithm" class="slide level2">
 <h2>Möller-Trumbore algorithm</h2>
 <figure>
@@ -86,7 +71,7 @@
 <p>From ray definition: <span class="math display">\[X = P+t\vec{\omega}\]</span></p>
 <p>From barycentric coordinates: <span class="math display">\[X = (1 - u - v)V_0 + uV_1 + vV_2\]</span></p>
 <p><span class="math display">\[P+t\vec{\omega} = (1 - u - v)V_0 + uV_1 + vV_2\]</span></p>
-<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[4]</span></p>
 <!-- slide -->
 </section>
 <section id="möller-trumbore-algorithm-linear-equations" class="slide level2">
@@ -94,7 +79,7 @@
 <p><span class="math display">\[[-\vec{\omega}, V_1-V_0, V_2-V_0]\begin{bmatrix}
 t \\ u \\ v
 \end{bmatrix}  = P - V_0\]</span></p>
-<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[4]</span></p>
 <!-- slide -->
 </section>
 <section id="möller-trumbore-algorithm-cramers-rule" class="slide level2">
@@ -109,7 +94,7 @@ t \\ u \\ v
 |-\vec{\omega}, \vec{T} , \vec{E_2}| \\
 |-\vec{\omega}, \vec{E_1}, \vec{T}|
 \end{bmatrix}\]</span></p>
-<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[4]</span></p>
 <!-- slide -->
 </section>
 <section id="möller-trumbore-algorithm-triple-product" class="slide level2">
@@ -124,16 +109,17 @@ t \\ u \\ v
 (\vec{\omega} \times \vec{E_2}) \cdot \vec{T}  \\
 (\vec{T} \times \vec{E_1}) \cdot \vec{\omega}
 \end{bmatrix}\]</span></p>
-<p><span class="citation" data-cites="Moller_algorithm">[5]</span></p>
+<p><span class="citation" data-cites="Moller_algorithm">[4]</span></p>
 <!-- slide -->
 </section>
 <section id="lab-ray-triangle-intersection" class="slide level2">
 <h2>Lab: Ray triangle intersection</h2>
 <ol type="1">
-<li>Implement <code>set_vertex_buffers</code>, <code>set_index_buffers</code>, <code>build_acceleration_structure</code>, and <code>intersection_shader</code> methods of <code>cg::renderer::raytracer</code> class</li>
-<li>Add <code>render_target</code> and <code>camera</code> in <code>cg::renderer::ray_tracing_renderer</code> class</li>
-<li>Define <code>miss_shader</code> of <code>ray_tracer</code></li>
-<li>Implement image clearing, calling <code>ray_generation</code>, and saving in <code>cg::renderer::ray_tracing_renderer</code> class</li>
+<li>Implement <code>set_vertex_buffers</code> and <code>set_index_buffers</code> of <code>raytracer</code> class</li>
+<li>Implement a constructor of <code>triangle</code> struct</li>
+<li>Implement an <code>intersection_shader</code> method of <code>raytracer</code> class</li>
+<li>Adjust <code>trace_ray</code> method of <code>raytracer</code> class to traverse geometry and call a closest hit shader</li>
+<li>Add <code>closest_hit_shader</code> to <code>raytracer</code> class to return diffuse color</li>
 </ol>
 <!-- slide -->
 </section>
@@ -149,11 +135,8 @@ t \\ u \\ v
 <div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
 <div class="csl-left-margin">3. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
 </div>
-<div id="ref-Shirley_ray_tracing" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">4. </div><div class="csl-right-inline">Shirley P. Ray tracing in one weekend. second. Amazon.com Services LLC, 2019. Vol. 1.</div>
-</div>
 <div id="ref-Moller_algorithm" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">5. </div><div class="csl-right-inline">Möller T., Trumbore B. Fast, minimum storage ray-triangle intersection // J. Graph. Tools. USA: A. K. Peters, Ltd., 1997. Vol. 2, № 1. P. 21–28.</div>
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Möller T., Trumbore B. Fast, minimum storage ray-triangle intersection // J. Graph. Tools. USA: A. K. Peters, Ltd., 1997. Vol. 2, № 1. P. 21–28.</div>
 </div>
 </div>
 </section>

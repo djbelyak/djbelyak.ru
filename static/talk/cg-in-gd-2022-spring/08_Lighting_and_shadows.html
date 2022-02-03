@@ -51,6 +51,10 @@
   <p class="date">05.02.2022</p>
 </section>
 
+<section id="current-result-vs-rasterizer" class="slide level2">
+<h2>Current result vs rasterizer</h2>
+<p><img data-src="img/rt_result.png" class="r-stretch" height="350" alt="Raytracing result" /> <img data-src="img/rasterizer_cornell_box.png" class="r-stretch" height="350" alt="Rasterizer result" /></p>
+</section>
 <section id="rendering-equation" class="slide level2">
 <h2>Rendering equation</h2>
 <p><span class="math display">\[\scriptsize{L_o(X, \vec{\omega_o}) = L_e(X, \vec{\omega_o}) + \int_S L_i(X, \vec{\omega_i}) f_{X,\vec{n}}(\vec{\omega_i}, \vec{\omega_o}) |\vec{\omega_i} \cdot \vec{n} | d{\omega_i}} \]</span></p>
@@ -87,15 +91,24 @@
 </section>
 <section id="lambertian-shading" class="slide level2">
 <h2>Lambertian shading</h2>
-<p><span class="math display">\[L_d = k_dImax(0, \vec{n}\cdot\vec{l})\]</span></p>
+<p><span class="math display">\[L_d = k_dI\max(0, \vec{n}\cdot\vec{l})\]</span></p>
 <p>where <span class="math inline">\(L_d\)</span> - diffusely reflected light,</p>
 <p><span class="math inline">\(k_d\)</span> - material’s diffuse coefficient,</p>
 <p><span class="math inline">\(\vec{n}\)</span> - surface normal,</p>
 <p><span class="math inline">\(\vec{l}\)</span> - direction toward the light <span class="citation" data-cites="McGuire_graphics_codex">[4]</span></p>
 <!-- slide -->
 </section>
-<section id="lab-lambertian-shading" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: Lambertian shading</h2>
+<section id="lab-lambertian-shading" class="slide level2">
+<h2>Lab: Lambertian shading</h2>
+<ol type="1">
+<li>Add light information to <code>lights</code> array of <code>ray_tracing_renderer</code></li>
+<li>Adjust <code>closest_hit_shader</code> of <code>raytracer</code> to implement Lambertian shading model</li>
+</ol>
+<!-- slide -->
+</section>
+<section id="shadow-rays-idea" class="slide level2">
+<h2>Shadow rays idea</h2>
+<p>Before adding the light source to the final point on the point <span class="math inline">\(X\)</span>, we should cast a ray from the point <span class="math inline">\(X\)</span> towards the light source. If any object occludes the shadow ray, the point <span class="math inline">\(X\)</span> is on shadow and the light should not be added the light source</p>
 <!-- slide -->
 </section>
 <section id="shadow-rays" class="slide level2">
@@ -105,8 +118,23 @@
 </figure>
 <!-- slide -->
 </section>
-<section id="lab-shadow-rays" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: Shadow rays</h2>
+<section id="shadow-rays-tips" class="slide level2">
+<h2>Shadow rays tips</h2>
+<ul>
+<li>Intersection with any geometry farther than light source doesn’t occlude the light source. To skip such object cast the ray with <span class="math inline">\(t_{max}\)</span> less than distance from <span class="math inline">\(X\)</span> to the light source</li>
+<li>To avoid self-intersection with the triangle owning <span class="math inline">\(X\)</span>, use <span class="math inline">\(t_{min}\)</span> more than 0</li>
+<li>One intersection is enough to find an occlusion - use an AnyHit shader</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="lab-shadow-rays" class="slide level2">
+<h2>Lab: Shadow rays</h2>
+<ol type="1">
+<li>Adjust <code>trace_ray</code> method of <code>trace_ray</code> to use <code>any_hit_shader</code></li>
+<li>Initialize <code>shadow_raytracer</code> in <code>ray_tracing_renderer</code></li>
+<li>Define <code>any_hit_shader</code> and <code>miss_shader</code> for <code>shadow_raytracer</code></li>
+<li>Adjust <code>closest_hit_shader</code> of <code>raytracer</code> to cast shadows rays and to ignore occluded lights</li>
+</ol>
 <!-- slide -->
 </section>
 <section id="references" class="slide level2 unnumbered">

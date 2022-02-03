@@ -113,6 +113,26 @@
   <p class="date">05.02.2022</p>
 </section>
 
+<section id="raytracing-complexity" class="slide level2">
+<h2>Raytracing complexity</h2>
+<p>In the case of 1 ray per pixel without additional ray casting the complexity of ray tracing is rays number * (triangles number * MT algorithm cost + Closest Hit cost)</p>
+<p><img data-src="img/ShaderPipeline.svg" class="r-stretch" height="400" alt="From: [1]" /><span class="citation" data-cites="optix">[2]</span></p>
+<!-- slide -->
+</section>
+<section id="complexity-reduction-strategies" class="slide level2">
+<h2>Complexity reduction strategies</h2>
+<ul>
+<li>Traversing bigger chunks of geometry at the same time</li>
+<li>Reducing the cost of the MT algorithm</li>
+<li>Using non-linear data structures</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="model-grouping" class="slide level2">
+<h2>Model grouping</h2>
+<p>Obj file was parsed to a vector of shapes. Each shape has its own vertex and index buffers. Let’s use the each shape as a single chunk for traversing. How we can find the shape-ray intersection?</p>
+<!-- slide -->
+</section>
 <section id="bounding-volume" class="slide level2">
 <h2>Bounding volume</h2>
 <figure>
@@ -135,7 +155,7 @@
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>float3 tmin = min(t0, t1);</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>float3 tmax = max(t0, t1);</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> maxelem(tmin) &lt;= minelem(tmax);</span></code></pre></div>
-<p><span class="citation" data-cites="McGuire_graphics_codex">[1]</span></p>
+<p><span class="citation" data-cites="McGuire_graphics_codex">[3]</span></p>
 <!-- slide -->
 </section>
 <section id="bounding-volume-hierarchy" class="slide level2">
@@ -145,22 +165,48 @@
 <li>Bottom-level acceleration structures (BLAS)</li>
 </ul>
 <figure>
-<img data-src="img/accelerationStructure.svg" class="r-stretch" height="300" alt="From: [2]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="DXRtutorial">[2]</span></figcaption>
+<img data-src="img/accelerationStructure.svg" class="r-stretch" height="300" alt="From: [1]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="DXRtutorial">[1]</span></figcaption>
 </figure>
 <!-- slide -->
 </section>
-<section id="lab-axis-aligned-bounding-boxes" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: Axis-aligned bounding boxes</h2>
+<section id="how-to-build-trees-of-acceleration-structures" class="slide level2">
+<h2>How to build trees of acceleration structures</h2>
+<p><strong>Surface area heuristic</strong> (SAH):</p>
+<p><span class="math display">\[C(A, B) = t_{trav}+p_{A}\sum_{i=1}^{N_A}t_{int}(a_i) + p_{B}\sum_{i=1}^{N_B}t_{int}(b_i)\]</span></p>
+<p>where <span class="math inline">\(C\)</span> - cost of traversing the node, <span class="math inline">\(p_{A}\)</span> and <span class="math inline">\(p_{B}\)</span> are the probabilities that the ray passes through the subvolumes <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> <span class="citation" data-cites="pharr_jakob_humphreys">[4]</span></p>
+<!-- slide -->
+</section>
+<section id="question-why-tlas-wont-speed-up-the-cornell-box-scene" class="slide level2">
+<h2>Question: why TLAS won’t speed up the Cornell box scene?</h2>
+<figure>
+<img data-src="img/cornell_box.jpg" class="r-stretch" height="350" alt="Original" /><figcaption aria-hidden="true">Original</figcaption>
+</figure>
+<!-- slide -->
+</section>
+<section id="lab-axis-aligned-bounding-boxes" class="slide level2">
+<h2>Lab: Axis-aligned bounding boxes</h2>
+<ol type="1">
+<li>Implement <code>aabb</code> class</li>
+<li>Implement <code>build_acceleration_structure</code> method of <code>raytracer</code> class</li>
+<li>Adjust <code>trace_ray</code> method of <code>raytracer</code> class to traverse the acceleration structure</li>
+<li>Adjust <code>ray_tracing_renderer</code> class to build the acceleration structure</li>
+</ol>
 <!-- slide -->
 </section>
 <section id="references" class="slide level2 unnumbered">
 <h2 class="unnumbered">References</h2>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography">
-<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
-</div>
 <div id="ref-DXRtutorial" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Lefrançois M.-K., Gautron P. DX12 raytracing tutorial - part 2 [Electronic resource]. URL: <a href="https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2">https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2</a>.</div>
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Lefrançois M.-K., Gautron P. DX12 raytracing tutorial - part 2 [Electronic resource]. URL: <a href="https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2">https://developer.nvidia.com/rtx/raytracing/dxr/DX12-Raytracing-tutorial-Part-2</a>.</div>
+</div>
+<div id="ref-optix" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Parker S.G. et al. OptiX: A general purpose ray tracing engine // ACM SIGGRAPH 2010 papers. New York, NY, USA: Association for Computing Machinery, 2010.</div>
+</div>
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-pharr_jakob_humphreys" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Pharr M., Jakob W., Humphreys G. Physically based rendering: From theory to implementation [Electronic resource]. 2021. URL: <a href="https://pbr-book.org/">https://pbr-book.org/</a>.</div>
 </div>
 </div>
 </section>
