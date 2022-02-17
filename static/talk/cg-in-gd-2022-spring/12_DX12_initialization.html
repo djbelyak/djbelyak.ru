@@ -51,8 +51,20 @@
   <p class="date">18.02.2022</p>
 </section>
 
+<section id="initialization-plan" class="slide level2">
+<h2>Initialization plan</h2>
+<ul>
+<li>Enable a validation layer</li>
+<li>Enumerate hardware adapters</li>
+<li>Create a device object</li>
+<li>Create a command queue</li>
+<li>Create a swap chain and bind it to window</li>
+</ul>
+<!-- slide -->
+</section>
 <section id="validation-layer" class="slide level2">
 <h2>Validation layer</h2>
+<p><strong>Validation layer</strong> is a way to check a correctness of API usage.</p>
 <p>To engage API validation:</p>
 <ol type="1">
 <li>Call <code>D3D12GetDebugInterface</code> function to get debug controller</li>
@@ -61,8 +73,14 @@
 </ol>
 <!-- slide -->
 </section>
-<section id="hardware-adapter" class="slide level2">
-<h2>Hardware adapter</h2>
+<section id="where-to-find-validation-layer-messages" class="slide level2">
+<h2>Where to find validation layer messages</h2>
+<p>Visual studio: Output window, Show output from Debug</p>
+<p>CLion: Debugger, LLDB window</p>
+<!-- slide -->
+</section>
+<section id="enumeration-of-hardware-adapters" class="slide level2">
+<h2>Enumeration of hardware adapters</h2>
 <ul>
 <li>Use <code>CreateDXGIFactory*</code> function to create a DXGI factory (don’t forget about flags)</li>
 <li>Call <code>EnumAdapters*</code> method to find HW</li>
@@ -70,13 +88,29 @@
 </ul>
 <!-- slide -->
 </section>
-<section id="device-and-command-queue" class="slide level2">
-<h2>Device and command queue</h2>
+<section id="device-creation" class="slide level2">
+<h2>Device creation</h2>
+<p><strong>Device</strong> is a represenation of GPU in DirectX API</p>
+<p>To create a device:</p>
 <ul>
 <li>Call <code>D3D12CreateDevice</code> function to create a DX12 device</li>
 <li>Make sure that minimum future level is D3D_FEATURE_LEVEL_<strong>11</strong>_0</li>
+</ul>
+<!-- slide -->
+</section>
+<section id="command-queue" class="slide level2">
+<h2>Command queue</h2>
+<p><strong>Command queue</strong> accumulates command lists to execute on GPU. GPU is able to maintain several commands queue for different purposes. <strong>Direct queue</strong> is the most powerful type of queues.</p>
+<ul>
 <li>Call <code>CreateCommandQueue</code> method of DX12 device to create a direct queue <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
 </ul>
+<!-- slide -->
+</section>
+<section id="swap-chain-idea" class="slide level2">
+<h2>Swap chain idea</h2>
+<figure>
+<img data-src="img/swap_chain.png" class="r-stretch" height="450" alt="Swap chain idea" /><figcaption aria-hidden="true">Swap chain idea</figcaption>
+</figure>
 <!-- slide -->
 </section>
 <section id="swap-chain" class="slide level2">
@@ -88,8 +122,15 @@
 </ul>
 <!-- slide -->
 </section>
-<section id="lab-load_pipeline-init-dx12-and-swap-chain" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: load_pipeline: init DX12 and swap chain</h2>
+<section id="lab-load_pipeline-init-dx12-and-swap-chain" class="slide level2">
+<h2>Lab: load_pipeline: init DX12 and swap chain</h2>
+<ol type="1">
+<li>Enable a validation layer</li>
+<li>Enumerate hardware adapters</li>
+<li>Create a device object</li>
+<li>Create a command queue</li>
+<li>Create a swap chain and bind it to window</li>
+</ol>
 <!-- slide -->
 </section>
 <section id="references" class="slide level2 unnumbered">

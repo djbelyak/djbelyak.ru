@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Ivan Belyavtsev">
-  <title>Lecture 11: App window</title>
+  <title>Lecture 11: Application’s window</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -20,6 +20,7 @@
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
@@ -106,13 +107,18 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Lecture 11: App window</h1>
+  <h1 class="title">Lecture 11: Application’s window</h1>
   <h3 class="subtitle">Computer graphics in Game development</h3>
 <img class="r-stretch" data-src="img/innopolis_logo.png"/>
   <p class="author">Ivan Belyavtsev</p>
   <p class="date">18.02.2022</p>
 </section>
 
+<section id="basics-of-directx-12" class="slide level2">
+<h2>Basics of DirectX 12</h2>
+<p>This part of course is going to be boring. There is plenty of preliminary work. We’ll get a somehow working application tomorrow only.</p>
+<!-- slide -->
+</section>
 <section id="graphics-apis" class="slide level2">
 <h2>Graphics APIs</h2>
 <ul>
@@ -132,25 +138,19 @@
 </ul>
 <!-- slide -->
 </section>
-<section id="what-is-our-choose" class="slide level2">
-<h2>What is our choose?</h2>
+<section id="what-our-choice-is" class="slide level2">
+<h2>What our choice is</h2>
 <ul>
 <li>Metal: Apple only</li>
 <li>Vulkan: open-source, well-documented, overcomplicated</li>
-<li>DirectX 12: Microsoft, less documentation, simpler</li>
+<li>DirectX 12: Microsoft, less documentation, <strong>simpler</strong></li>
 </ul>
-<!-- slide -->
-</section>
-<section id="notification" class="slide level2">
-<h2>Notification</h2>
-<p>This part of course is going to be boring. There is plenty of preliminary work. We’ll get a somehow working application tomorrow</p>
 <!-- slide -->
 </section>
 <section id="pre-requirements" class="slide level2">
 <h2>Pre requirements</h2>
 <ul>
-<li>Windows 10 (at least VM)</li>
-<li>Visual Studio</li>
+<li>Windows 10 or 11 (at least VM)</li>
 <li><a href="https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/">WinSDK</a></li>
 <li>(Optional) <a href="https://renderdoc.org/">RenderDoc</a></li>
 </ul>
@@ -159,17 +159,47 @@
 <section id="plan" class="slide level2">
 <h2>Plan</h2>
 <ul>
-<li><strong>Create a window</strong></li>
+<li><strong>Learn how to create a window</strong></li>
 <li>Initialize DX12</li>
 <li>Create and setup resources</li>
 <li>Create and setup the rendering pipeline</li>
 <li>Add per frame updates</li>
 </ul>
+</section>
+<section id="creating-the-window" class="slide level2">
+<h2>Creating the window</h2>
+<ol type="1">
+<li>Create <code>WNDCLASS</code> or <code>WNDCLASSEX</code> instance</li>
+<li>Register the instance with <code>RegisterClass</code> or <code>RegisterClassEx</code> call</li>
+<li>Call <code>CreateWindow</code> or <code>CreateWindowEx</code> and keep <code>HWND</code> results</li>
+<li>Call <code>ShowWindows</code> to present <span class="citation" data-cites="win32">[1]</span></li>
+</ol>
 <!-- slide -->
+</section>
+<section id="event-loop" class="slide level2">
+<h2>Event loop</h2>
+<ol type="1">
+<li>Take the message via <code>GetMessage</code> or <code>PeekMessage</code></li>
+<li>Run <code>TranslateMessage</code> to make the message readable</li>
+<li>Call <code>DispatchMessage</code> to handling (<code>DispatchMessage</code> calls the windows procedure from <code>WNDCLASS</code>) <span class="citation" data-cites="win32">[1]</span></li>
+</ol>
+<!-- slide -->
+</section>
+<section id="review-app-windows" class="slide level2 r-fit-text">
+<h2 class="r-fit-text">Review: App windows</h2>
+<!-- slide-->
+</section>
+<section id="lab-review-and-preparations" class="slide level2">
+<h2>Lab: Review and preparations</h2>
+<ol type="1">
+<li>Review a code of <code>WinMain</code> procedure and <code>cg::utils::window</code> class</li>
+<li>Add <code>model</code> and <code>camera</code> creation code into <code>init</code> method of <code>dx12_renderer</code> class</li>
+</ol>
+<!-- slide-->
 </section>
 <section id="comobj" class="slide level2">
 <h2>ComObj</h2>
-<p>The Microsoft Component Object Model (COM) is a platform-independent, distributed, object-oriented system for creating binary software components that can interact<span class="citation" data-cites="com">[1]</span>.</p>
+<p>The Microsoft Component Object Model (COM) is a platform-independent, distributed, object-oriented system for creating binary software components that can interact<span class="citation" data-cites="com">[2]</span>.</p>
 <!-- slide -->
 </section>
 <section id="iunknown-interface" class="slide level2">
@@ -179,7 +209,7 @@
 <ul>
 <li><code>QueryInterface(REFIID riid, LPVOID *ppv)</code></li>
 <li><code>AddRef()</code></li>
-<li><code>Release()</code> <span class="citation" data-cites="com">[1]</span></li>
+<li><code>Release()</code> <span class="citation" data-cites="com">[2]</span></li>
 </ul>
 <!-- slide-->
 </section>
@@ -199,48 +229,21 @@
 <ul>
 <li>include <code>wrl/client.h</code></li>
 <li>use namespace <code>Microsoft::WRL::ComPtr</code></li>
-<li>use instead of raw Com objects <span class="citation" data-cites="comptr">[2]</span></li>
+<li>use instead of raw Com objects <span class="citation" data-cites="comptr">[3]</span></li>
 </ul>
 <!-- slide -->
-</section>
-<section id="creating-the-window" class="slide level2">
-<h2>Creating the window</h2>
-<ol type="1">
-<li>Create <code>WNDCLASS</code> or <code>WNDCLASSEX</code> instance</li>
-<li>Register the instance with <code>RegisterClass</code> or <code>RegisterClassEx</code> call</li>
-<li>Call <code>CreateWindow</code> or <code>CreateWindowEx</code> and keep <code>HWND</code> results</li>
-<li>Call <code>ShowWindows</code> to present <span class="citation" data-cites="win32">[3]</span></li>
-</ol>
-<!-- slide -->
-</section>
-<section id="event-loop" class="slide level2">
-<h2>Event loop</h2>
-<ol type="1">
-<li>Take the message via <code>GetMessage</code> or <code>PeekMessage</code></li>
-<li>Run <code>TranslateMessage</code> to make the message readable</li>
-<li>Call <code>DispatchMessage</code> to handling (<code>DispatchMessage</code> calls the windows procedure from <code>WNDCLASS</code>) <span class="citation" data-cites="win32">[3]</span></li>
-</ol>
-<!-- slide -->
-</section>
-<section id="review-app-windows" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Review: App windows</h2>
-<!-- slide-->
-</section>
-<section id="lab-render-init" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: Render init</h2>
-<!-- slide-->
 </section>
 <section id="references" class="slide level2 unnumbered">
 <h2 class="unnumbered">References</h2>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-win32" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M., Jacobs M. Get started with Win32 and c++ [Electronic resource]. 2018. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows">https://docs.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows</a>.</div>
+</div>
 <div id="ref-com" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M. The component object model [Electronic resource]. 2018. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/com/the-component-object-model">https://docs.microsoft.com/en-us/windows/win32/com/the-component-object-model</a>.</div>
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Satran M. The component object model [Electronic resource]. 2018. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/com/the-component-object-model">https://docs.microsoft.com/en-us/windows/win32/com/the-component-object-model</a>.</div>
 </div>
 <div id="ref-comptr" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">2. </div><div class="csl-right-inline">Walbourn C. ComPtr [Electronic resource]. 2019. URL: <a href="https://github.com/Microsoft/DirectXTK/wiki/ComPtr">https://github.com/Microsoft/DirectXTK/wiki/ComPtr</a>.</div>
-</div>
-<div id="ref-win32" class="csl-entry" role="doc-biblioentry">
-<div class="csl-left-margin">3. </div><div class="csl-right-inline">Satran M., Jacobs M. Get started with Win32 and c++ [Electronic resource]. 2018. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows">https://docs.microsoft.com/en-us/windows/win32/learnwin32/learn-to-program-for-windows</a>.</div>
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Walbourn C. ComPtr [Electronic resource]. 2019. URL: <a href="https://github.com/Microsoft/DirectXTK/wiki/ComPtr">https://github.com/Microsoft/DirectXTK/wiki/ComPtr</a>.</div>
 </div>
 </div>
 </section>

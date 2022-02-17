@@ -20,6 +20,7 @@
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
@@ -116,20 +117,20 @@
 <section id="rendering-pipeline" class="slide level2">
 <h2>Rendering pipeline</h2>
 <figure>
-<img data-src="img/pipeline-dx11.png" alt="From: https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" /><figcaption aria-hidden="true">From: <a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11" class="uri">https://docs.microsoft.com/en-us/windows-hardware/drivers/display/pipelines-for-direct3d-version-11</a></figcaption>
+<img data-src="img/pipeline.png" alt="From: https://docs.microsoft.com/en-us/windows/win32/direct3d12/pipelines-and-shaders-with-directx-12" /><figcaption aria-hidden="true">From: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/pipelines-and-shaders-with-directx-12" class="uri">https://docs.microsoft.com/en-us/windows/win32/direct3d12/pipelines-and-shaders-with-directx-12</a></figcaption>
 </figure>
 <!-- slide -->
 </section>
 <section id="pipeline-state-object" class="slide level2">
 <h2>Pipeline state object</h2>
-<p>PSO keeps a state of rendering pipeline:</p>
+<p>PSO keeps a state of the rendering pipeline:</p>
 <ul>
-<li>Input layout</li>
-<li>Root signature</li>
-<li>Shaders bytecode</li>
-<li>State of rasterizer</li>
-<li>Blending state</li>
-<li>Depth/stencil state <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+<li>Input layout - data layout in vertex buffer</li>
+<li>Root signature - definition what types of resources are bound to the pipeline</li>
+<li>Shaders bytecode - compiled shaders</li>
+<li>State of rasterizer - settings of the rasterizer</li>
+<li>Blending state - how to blend new triangles with existing</li>
+<li>Depth/stencil state - setup of depth function and test<span class="citation" data-cites="programming_guide_2019">[1]</span></li>
 </ul>
 <!-- slide -->
 </section>
@@ -173,14 +174,13 @@ float4 PSMain(PSInput input) : SV_TARGET
 <p>Descriptor table hold a range of descriptor heap which is going to be bound to the root signature <span class="citation" data-cites="programming_guide_2019">[1]</span></p>
 <!-- slide -->
 </section>
-<section id="lab-load_assets-pipeline-state-creation" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: load_assets: pipeline state creation</h2>
-<!-- slide -->
-</section>
-<section id="command-allocator" class="slide level2">
-<h2>Command allocator</h2>
-<p>A region of memory to keep a queue GPU commands.</p>
-<p>Has one method <code>Reset</code>, which allows to re-use the memory for the next commands <span class="citation" data-cites="programming_guide_2019">[1]</span></p>
+<section id="lab-load_assets-pipeline-state-creation" class="slide level2">
+<h2>Lab: load_assets: pipeline state creation</h2>
+<ol type="1">
+<li>Create a descriptor table and a root signature</li>
+<li>Compile shadres</li>
+<li>Setup a PSO descriptor and create a PSO</li>
+</ol>
 <!-- slide -->
 </section>
 <section id="command-queues" class="slide level2">
@@ -201,8 +201,19 @@ float4 PSMain(PSInput input) : SV_TARGET
 </ul>
 <!-- slide -->
 </section>
-<section id="lab-command-list-creation-and-population" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: Command list creation and population</h2>
+<section id="command-allocator" class="slide level2">
+<h2>Command allocator</h2>
+<p>A region of memory to keep a queue GPU commands.</p>
+<p>Has one method <code>Reset</code>, which allows to re-use the memory for the next commands <span class="citation" data-cites="programming_guide_2019">[1]</span></p>
+<!-- slide -->
+</section>
+<section id="lab-command-list-creation-and-population" class="slide level2">
+<h2>Lab: Command list creation and population</h2>
+<ol type="1">
+<li>Create command allocators and a command list</li>
+<li>Implement <code>populate_command_list</code> method</li>
+<li>Implement <code>render</code> method</li>
+</ol>
 <!-- slide -->
 </section>
 <section id="synchronizations" class="slide level2">
@@ -218,8 +229,12 @@ float4 PSMain(PSInput input) : SV_TARGET
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <!-- slide -->
 </section>
-<section id="lab-synchronization" class="slide level2 r-fit-text">
-<h2 class="r-fit-text">Lab: Synchronization</h2>
+<section id="lab-synchronization" class="slide level2">
+<h2>Lab: Synchronization</h2>
+<ol type="1">
+<li>Implement <code>wait_for_gpu</code> method</li>
+<li>Implement <code>move_to_next_frame</code> method</li>
+</ol>
 <!-- slide -->
 </section>
 <section id="references" class="slide level2 unnumbered">
