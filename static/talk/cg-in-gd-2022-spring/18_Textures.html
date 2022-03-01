@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 18: Textures</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 18: Textures</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">04.03.2022</p>
+</section>
+
+<section id="plan" class="slide level2">
+<h2>Plan</h2>
+<ol type="1">
+<li>Get texture path for each shape in <code>model</code> class</li>
+<li>Add root parameter for SRV</li>
+<li>Add static sampler to a root signature</li>
+<li>Create and compile PS shader for textured objects</li>
+<li>Make PSO for rendering textured objects</li>
+<li>Create and upload resources with texture’s data</li>
+<li>Create shader resource view for each texture</li>
+<li>Based on draw call number set appropriate PSO and bind descriptor table <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+</ol>
+<!-- slide -->
+</section>
+<section id="get-texture-path-for-each-shape" class="slide level2">
+<h2>Get texture path for each shape</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>textures.resize(shapes.size());</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="at">const</span> <span class="kw">auto</span>&amp; shape: shapes)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ..</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (!materials[mesh.material_ids[<span class="dv">0</span>]].diffuse_texname.empty())</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        textures[shape_id] = </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            model_path.parent_path() / </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            smaterials[mesh.material_ids[<span class="dv">0</span>]].diffuse_texname;</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    shape_id++;</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<!-- slide -->
+</section>
+<section id="add-root-parameter-for-srv" class="slide level2">
+<h2>Add root parameter for SRV</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ranges[<span class="dv">1</span>].Init(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    D3D12_DESCRIPTOR_RANGE_TYPE_SRV, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>root_parameters[<span class="dv">1</span>].InitAsDescriptorTable(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, &amp;ranges[<span class="dv">1</span>], D3D12_SHADER_VISIBILITY_PIXEL);</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>D3D12_ROOT_SIGNATURE_FLAGS rs_flags =</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;</span></code></pre></div>
+<!-- slide -->
+</section>
+<section id="static-sampler-descriptor" class="slide level2">
+<h2>Static sampler descriptor</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>D3D12_STATIC_SAMPLER_DESC sampler_desc{};</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sampler_desc.Filter = D3D12_FILTER_ANISOTROPIC;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sampler_desc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>sampler_desc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>sampler_desc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>sampler_desc.MipLODBias = <span class="dv">0</span>;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>sampler_desc.MaxAnisotropy = <span class="dv">16</span>;</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>sampler_desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>sampler_desc.BorderColor =</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>sampler_desc.MinLOD = <span class="dv">0</span>;</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>sampler_desc.MaxLOD = D3D12_FLOAT32_MAX;</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>sampler_desc.ShaderRegister = <span class="dv">0</span>;</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>sampler_desc.RegisterSpace = <span class="dv">0</span>;</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>sampler_desc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;</span></code></pre></div>
+<!-- slide -->
+</section>
+<section id="add-static-sampler-to-a-root-signature" class="slide level2">
+<h2>Add static sampler to a root signature</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rs_descriptor;</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>rs_descriptor.Init_1_1(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    _countof(root_parameters), root_parameters, <span class="dv">1</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    &amp;sampler_desc, rs_flags);</span></code></pre></div>
+<!-- slide -->
+</section>
+<section id="shader-global-definitions" class="slide level2">
+<h2>Shader’ global definitions</h2>
+<pre class="hlsl"><code>Texture2D g_texture : register(t0);
+SamplerState g_sampler : register(s0);
+
+struct PSInput
+{
+    float4 position : SV_POSITION;
+    float4 color: COLOR;
+    float2 uv : TEXCOORD;
+};
+</code></pre>
+<!-- slide -->
+</section>
+<section id="vertex-shader" class="slide level2">
+<h2>Vertex shader</h2>
+<pre class="hlsl"><code>PSInput VSMain(float4 position : POSITION, float4 normal: NORMAL, float4 ambient : COLOR0, float4 diffuse : COLOR1,  float4 emissive : COLOR2, float4 texcoords : TEXCOORD)
+{
+    PSInput result;
+
+    result.position = mul(mwpMatrix, position);
+    result.color = ambient;
+    result.uv = texcoords.xy;
+
+    return result;
+}</code></pre>
+<!-- slide -->
+</section>
+<section id="pixel-shader" class="slide level2">
+<h2>Pixel shader</h2>
+<pre class="hlsl"><code>
+float4 PSMain_texture(PSInput input) : SV_TARGET
+{
+    return g_texture.Sample(g_sampler, input.uv);
+}</code></pre>
+<!-- slide -->
+</section>
+<section id="make-pso-for-rendering-textured-objects" class="slide level2">
+<h2>Make PSO for rendering textured objects</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pso_descriptor.PS =</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    CD3DX12_SHADER_BYTECODE(pixel_shader_texture.Get());</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>THROW_IF_FAILED(device-&gt;CreateGraphicsPipelineState(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    &amp;pso_descriptor, IID_PPV_ARGS(&amp;pipeline_state_texture)));</span></code></pre></div>
+<!-- slide -->
+</section>
+<section id="load-texture-data" class="slide level2">
+<h2>Load texture data</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>string full_name = <span class="bu">std::</span>filesystem<span class="bu">::</span>absolute(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    model-&gt;get_per_shape_texture_files()[s]).string();</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> tex_width, tex_height, tex_channels;</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">char</span>* image =</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    stbi_load(full_name.c_str(), &amp;tex_width,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        &amp;tex_height, &amp;tex_channels, STBI_rgb_alpha);</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (image == <span class="kw">nullptr</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="bu">std::</span>runtime_error(<span class="st">&quot;Can&#39;t load texture&quot;</span>);</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<!-- slide-->
+</section>
+<section id="create-texture-resources" class="slide level2">
+<h2>Create texture resources</h2>
+<ul>
+<li>Size: <code>tex_width</code>, <code>tex_height</code></li>
+<li>Format: <code>DXGI_FORMAT_R8G8B8A8_UNORM</code></li>
+<li>Mip level: 1</li>
+<li>Upload buffer size: <code>GetRequiredIntermediateSize(textures[s].Get(), 0, 1)</code></li>
+<li>RowPitch: <code>tex_width * STBI_rgb_alpha</code></li>
+<li>SlicePitch: <code>texture_data.RowPitch * tex_height</code></li>
+<li>State after copy: <code>PIXEL_SHADER_RESOURCE</code></li>
+</ul>
+<!-- slide -->
+</section>
+<section id="create-shader-resource-view-for-each-texture" class="slide level2">
+<h2>Create shader resource view for each texture</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc{};</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>srv_desc.Shader4ComponentMapping =</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>srv_desc.Format = texture_desc.Format;</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>srv_desc.Texture2D.MipLevels = <span class="dv">1</span>;</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>device-&gt;CreateShaderResourceView(textures[s].Get(), &amp;srv_desc,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a> cbv_srv_handle);</span></code></pre></div>
+<!-- slide -->
+</section>
+<section id="based-on-draw-call-number-set-appropriate-pso-and-bind-descriptor-table" class="slide level2">
+<h2>Based on draw call number set appropriate PSO and bind descriptor table</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (!model-&gt;get_per_shape_texture_files()[s].empty()) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    cbv_srv_handle.InitOffsetted(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        cbv_srv_heap-&gt;GetGPUDescriptorHandleForHeapStart(),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">static_cast</span>&lt;INT&gt;(s + <span class="dv">1</span>), cbv_srv_descriptor_size);</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    command_list-&gt;SetGraphicsRootDescriptorTable(<span class="dv">1</span>, </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                            cbv_srv_handle);</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    command_list-&gt;SetPipelineState(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                            pipeline_state_texture.Get());</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    command_list-&gt;SetPipelineState(pipeline_state.Get());</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<!-- slide-->
+</section>
+<section id="dabrovic-sponza" class="slide level2">
+<h2>Dabrovic Sponza</h2>
+<figure>
+<img data-src="img/sponza.png" class="r-stretch" height="300" alt="From: [2]" /><figcaption aria-hidden="true">From: <span class="citation" data-cites="McGuire2017Data">[2]</span></figcaption>
+</figure>
+<!-- slide-->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-programming_guide_2019" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Satran M. et al. Direct3D 12 programming guide [Electronic resource]. 2019. URL: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide">https://docs.microsoft.com/en-us/windows/win32/direct3d12/directx-12-programming-guide</a>.</div>
+</div>
+<div id="ref-McGuire2017Data" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">McGuire M. Computer graphics archive. 2017.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

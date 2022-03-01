@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ivan Belyavtsev">
+  <title>Lecture 19: Lighting</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js/dist/theme/lectures.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Lecture 19: Lighting</h1>
+  <h3 class="subtitle">Computer graphics in Game development</h3>
+<img class="r-stretch" data-src="img/innopolis_logo.png"/>
+  <p class="author">Ivan Belyavtsev</p>
+  <p class="date">05.03.2022</p>
+</section>
+
+<section id="recap-lambertian-shading" class="slide level2">
+<h2>Recap: Lambertian shading</h2>
+<p><span class="math display">\[L_d = k_dI\max(0, \vec{n}\cdot\vec{l})\]</span></p>
+<p>where <span class="math inline">\(L_d\)</span> - diffusely reflected light,</p>
+<p><span class="math inline">\(k_d\)</span> - material’s diffuse coefficient,</p>
+<p><span class="math inline">\(\vec{n}\)</span> - surface normal,</p>
+<p><span class="math inline">\(\vec{l}\)</span> - direction toward the light <span class="citation" data-cites="McGuire_graphics_codex">[1]</span></p>
+<!-- slide-->
+</section>
+<section id="recap-spaces" class="slide level2">
+<h2>Recap: Spaces</h2>
+<ul>
+<li>Model space - coordinate system where the object was created</li>
+<li>World space - where all object located in proper locations</li>
+<li>View space - a space located around camera</li>
+<li>Projection space - a projected camera frustrum to cube space</li>
+<li>Screen space - a space of resulted image <span class="citation" data-cites="serranoharold2015">[2]</span></li>
+</ul>
+<!-- slide-->
+</section>
+<section id="question-in-which-space-we-can-make-the-lambertian-shading" class="slide level2">
+<h2>Question: in which space we can make the Lambertian shading?</h2>
+<!-- slide -->
+</section>
+<section id="shader-global-definitions" class="slide level2">
+<h2>Shader’ global definitions</h2>
+<pre class="hlsl"><code>cbuffer ConstantBuffer: register(b0)
+{
+    float4x4 mwpMatrix;
+}
+
+Texture2D g_texture : register(t0);
+SamplerState g_sampler : register(s0);
+
+struct PSInput
+{
+    float4 position : SV_POSITION;
+    float4 color: COLOR;
+    float2 uv : TEXCOORD;
+    float3 world_position : POSITION;
+    float3 normal : NORMAL;
+};
+</code></pre>
+<!-- slide -->
+</section>
+<section id="vertex-shader" class="slide level2">
+<h2>Vertex shader</h2>
+<pre class="hlsl"><code>PSInput VSMain(float4 position : POSITION, float4 normal: NORMAL, float4 ambient : COLOR0, float4 diffuse : COLOR1,  float4 emissive : COLOR2, float4 texcoords : TEXCOORD)
+{
+    PSInput result;
+
+    result.position = mul(mwpMatrix, position);
+    result.color = ambient;
+    result.uv = texcoords.xy;
+    result.world_position = position.xyz;
+    result.normal = normal.xyz;
+
+    return result;
+}</code></pre>
+<!-- slide -->
+</section>
+<section id="pixel-shader" class="slide level2">
+<h2>Pixel shader</h2>
+<pre class="hlsl"><code>
+float GetLambertIntensity(PSInput input)
+{
+    // (1, 1, 1) is light position in world space
+    float3 to_light = normalize(float3(1.f, 1.f, 1.f) - input.world_position);
+    return saturate(dot(input.normal, to_light));
+}
+
+float4 PSMain_texture(PSInput input) : SV_TARGET
+{
+    return g_texture.Sample(g_sampler, input.uv);
+}</code></pre>
+<!-- slide-->
+</section>
+<section id="references" class="slide level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body" role="doc-bibliography">
+<div id="ref-McGuire_graphics_codex" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">McGuire M. The graphics codex. 2.14 ed. Casual Effects, 2018.</div>
+</div>
+<div id="ref-serranoharold2015" class="csl-entry" role="doc-biblioentry">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Serrano H. From model space to screen space- OpenGL space transformations [Electronic resource]. 2015. URL: <a href="https://www.haroldserrano.com/blog/from-model-space-to-screen-space-opengl-space-transformations">https://www.haroldserrano.com/blog/from-model-space-to-screen-space-opengl-space-transformations</a>.</div>
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js/plugin/notes/notes.js"></script>
+  <script src="reveal.js/plugin/search/search.js"></script>
+  <script src="reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

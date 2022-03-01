@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Ivan Belyavtsev">
-  <title>Lecture 14: Pipeline setup in DX12</title>
+  <title>Lecture 17: Depth buffer in DX12</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -106,135 +106,86 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Lecture 14: Pipeline setup in DX12</h1>
+  <h1 class="title">Lecture 17: Depth buffer in DX12</h1>
   <h3 class="subtitle">Computer graphics in Game development</h3>
 <img class="r-stretch" data-src="img/innopolis_logo.png"/>
   <p class="author">Ivan Belyavtsev</p>
-  <p class="date">19.02.2022</p>
+  <p class="date">04.03.2022</p>
 </section>
 
-<section id="rendering-pipeline" class="slide level2">
-<h2>Rendering pipeline</h2>
-<figure>
-<img data-src="img/pipeline.png" alt="From: https://docs.microsoft.com/en-us/windows/win32/direct3d12/pipelines-and-shaders-with-directx-12" /><figcaption aria-hidden="true">From: <a href="https://docs.microsoft.com/en-us/windows/win32/direct3d12/pipelines-and-shaders-with-directx-12" class="uri">https://docs.microsoft.com/en-us/windows/win32/direct3d12/pipelines-and-shaders-with-directx-12</a></figcaption>
-</figure>
-<!-- slide -->
-</section>
-<section id="pipeline-state-object" class="slide level2">
-<h2>Pipeline state object</h2>
-<p>PSO keeps a state of the rendering pipeline:</p>
-<ul>
-<li>Input layout - data layout in vertex buffer</li>
-<li>Root signature - definition what types of resources are bound to the pipeline</li>
-<li>Shaders bytecode - compiled shaders</li>
-<li>State of rasterizer - settings of the rasterizer</li>
-<li>Blending state - how to blend new triangles with existing</li>
-<li>Depth/stencil state - setup of depth function and test<span class="citation" data-cites="programming_guide_2019">[1]</span></li>
-</ul>
-<!-- slide -->
-</section>
-<section id="pso-doesnt-keep" class="slide level2">
-<h2>PSO doesn’t keep</h2>
-<ul>
-<li>Vertex and index buffers</li>
-<li>Primitive topology</li>
-<li>Render target and depth buffer</li>
-<li>Particular root signature, descriptor heaps and tables <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
-</ul>
-<!-- slide -->
-</section>
-<section id="shaders" class="slide level2">
-<h2>Shaders</h2>
-<pre class="hlsl"><code>cbuffer ConstantBuffer: register(b0)
-{
-    float4x4 mwpMatrix;
-}
-struct PSInput
-{
-    float4 position : SV_POSITION;
-    float4 color : COLOR;
-};
-PSInput VSMain(float4 position : POSITION, float4 normal: NORMAL, float4 ambient : COLOR0, float4 diffuse : COLOR1,  float4 emissive : COLOR2)
-{
-    PSInput result;
-    result.position = mul(mwpMatrix, position);
-    result.color = ambient;
-    return result;
-}
-float4 PSMain(PSInput input) : SV_TARGET
-{
-    return input.color;
-}</code></pre>
-<!-- slide -->
-</section>
-<section id="descriptor-tables-and-root-signature" class="slide level2">
-<h2>Descriptor tables and root signature</h2>
-<p>Root signature links command lists to the resources the shaders require.</p>
-<p>Descriptor table hold a range of descriptor heap which is going to be bound to the root signature <span class="citation" data-cites="programming_guide_2019">[1]</span></p>
-<!-- slide -->
-</section>
-<section id="lab-load_assets-pipeline-state-creation" class="slide level2">
-<h2>Lab: load_assets: pipeline state creation</h2>
+<section id="plan" class="slide level2">
+<h2>Plan</h2>
 <ol type="1">
-<li>Create a descriptor table and a root signature</li>
-<li>Compile shadres</li>
-<li>Setup a PSO descriptor and create a PSO</li>
+<li>Create a depth buffer resource</li>
+<li>Create a depth-stencil descriptor heap</li>
+<li>Create a depth-stencil view</li>
+<li>Setup pso to work with depth-stencil buffer</li>
+<li>Set the depth-stencil descriptor as OM target</li>
+<li>Clear the depth-stencil view <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
 </ol>
-<!-- slide -->
+<!-- slide-->
 </section>
-<section id="command-queues" class="slide level2">
-<h2>Command queues</h2>
-<p>Command queue allows to submit commands via command list and make the fence synchronization</p>
+<section id="create-a-depth-buffer-resource" class="slide level2">
+<h2>Create a depth buffer resource</h2>
 <ul>
-<li><code>ExecuteCommandLists</code> for submitting command lists</li>
-<li><code>Signal</code> for setting a special value to the fence <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
+<li>Size: same as for render target</li>
+<li>Format: <code>DXGI_FORMAT_D32_FLOAT</code></li>
+<li>Flags: <code>ALLOW_DEPTH_STENCIL</code> and <code>DENY_SHADER_RESOURCE</code></li>
+<li>Default values: 1.f for depth, 0 for stencil</li>
+<li>Heap: default</li>
+<li><strong>Initial state</strong>: <code>DEPTH_WRITE</code></li>
 </ul>
-<!-- slide -->
+<!-- slide-->
 </section>
-<section id="command-lists" class="slide level2">
-<h2>Command lists</h2>
-<p>Command list a set of GPU command which will executed</p>
-<ul>
-<li><code>Reset</code> transfers the command list to the record state</li>
-<li><code>Close</code> transfers the command list out of the record state <span class="citation" data-cites="programming_guide_2019">[1]</span></li>
-</ul>
-<!-- slide -->
+<section id="create-a-depth-stencil-descriptor-heap" class="slide level2">
+<h2>Create a depth-stencil descriptor heap</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>D3D12_DESCRIPTOR_HEAP_DESC dsv_heap_desc = {};</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    dsv_heap_desc.NumDescriptors = <span class="dv">1</span>;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    dsv_heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    dsv_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    THROW_IF_FAILED(device-&gt;CreateDescriptorHeap(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        &amp;dsv_heap_desc, IID_PPV_ARGS(&amp;dsv_heap)));</span></code></pre></div>
+<!-- slide-->
 </section>
-<section id="command-allocator" class="slide level2">
-<h2>Command allocator</h2>
-<p>A region of memory to keep a queue GPU commands.</p>
-<p>Has one method <code>Reset</code>, which allows to re-use the memory for the next commands <span class="citation" data-cites="programming_guide_2019">[1]</span></p>
-<!-- slide -->
+<section id="create-a-depth-stencil-view" class="slide level2">
+<h2>Create a depth-stencil view</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>device-&gt;CreateDepthStencilView(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    depth_buffer.Get(), <span class="kw">nullptr</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    dsv_heap-&gt;GetCPUDescriptorHandleForHeapStart());</span></code></pre></div>
+<!-- slide-->
 </section>
-<section id="lab-command-list-creation-and-population" class="slide level2">
-<h2>Lab: Command list creation and population</h2>
-<ol type="1">
-<li>Create command allocators and a command list</li>
-<li>Implement <code>populate_command_list</code> method</li>
-<li>Implement <code>render</code> method</li>
-</ol>
-<!-- slide -->
+<section id="setup-pso-to-work-with-depth-stencil-buffer" class="slide level2">
+<h2>Setup pso to work with depth-stencil buffer</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pso_descriptor.DepthStencilState.DepthEnable = TRUE;</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pso_descriptor.DepthStencilState.StencilEnable = FALSE;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pso_descriptor.DepthStencilState.DepthFunc = </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                    D3D12_COMPARISON_FUNC_LESS_EQUAL;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pso_descriptor.DepthStencilState.DepthWriteMask = </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                    D3D12_DEPTH_WRITE_MASK_ALL;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>pso_descriptor.DSVFormat = DXGI_FORMAT_D32_FLOAT;</span></code></pre></div>
+<!-- slide-->
 </section>
-<section id="synchronizations" class="slide level2">
-<h2>Synchronizations</h2>
-<p>Fence is an object of GPU-CPU synchronization <span class="citation" data-cites="programming_guide_2019">[1]</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>command_queue-&gt;Signal(fence.Get(), prev_fence_value));</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (fence-&gt;GetCompletedValue() &lt; prev_fence_value)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">//fence_event is a system handle for the fence</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ThrowIfFailed(fence-&gt;SetEventOnCompletion(prev_fence_value, fence_event));</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    WaitForSingleObject(fence_event, INFINITE);</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<!-- slide -->
+<section id="set-render-target-and-clear" class="slide level2">
+<h2>Set render target and clear</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>CD3DX12_CPU_DESCRIPTOR_HANDLE dsv_handle(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    dsv_heap-&gt;GetCPUDescriptorHandleForHeapStart());</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>command_list-&gt;OMSetRenderTargets(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, &amp;rtv_handle, TRUE, &amp;dsv_handle);</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>command_list-&gt;ClearDepthStencilView(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    dsv_handle, D3D12_CLEAR_FLAG_DEPTH, <span class="fl">1.0</span><span class="bu">f</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="kw">nullptr</span>);</span></code></pre></div>
+<!-- slide-->
 </section>
-<section id="lab-synchronization" class="slide level2">
-<h2>Lab: Synchronization</h2>
-<ol type="1">
-<li>Implement <code>wait_for_gpu</code> method</li>
-<li>Implement <code>move_to_next_frame</code> method</li>
-</ol>
-<!-- slide -->
+<section id="how-to-render-a-wireframe-image" class="slide level2">
+<h2>How to render a wireframe image</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">//Wireframe image</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pso_descriptor.RasterizerState.FillMode = </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                        D3D12_FILL_MODE_WIREFRAME;</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Solid image (default)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pso_descriptor.RasterizerState.FillMode = </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                        D3D12_FILL_MODE_SOLID;</span></code></pre></div>
+<p><span class="citation" data-cites="programming_guide_2019">[1]</span></p>
+<!-- slide-->
 </section>
 <section id="references" class="slide level2 unnumbered">
 <h2 class="unnumbered">References</h2>
