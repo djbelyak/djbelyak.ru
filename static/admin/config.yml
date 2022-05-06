@@ -1,0 +1,99 @@
+backend:
+  name: github
+  repo: djbelyak/djbelyak.ru
+  branch: master
+media_folder: static/img
+public_folder: /img
+collections:
+  - name: 'post_en'
+    label: 'Blog'
+    folder: 'content/post'
+    create: true
+    filter: {field: "language", value: "en"}
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean' }
+      - { label: 'Tags',   name: 'tags', widget: 'list', default: ['talk'] }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'post_ru'
+    label: 'Блог'
+    folder: 'content/post'
+    create: true
+    slug: '{{slug}}'
+    filter: {field: "language", value: "ru"}
+    editor:
+      preview: false
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean' }
+      - { label: 'Tags',   name: 'tags', widget: 'list', default: ['talk'] }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'publication_en'
+    label: 'Publications'
+    folder: 'content/publication'
+    create: true
+    filter: {field: "language", value: "en"}
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean' }
+      - { label: 'Tags',   name: 'tags', widget: 'list', default: ['talk'] }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'publication_ru'
+    label: 'Публикации'
+    folder: 'content/publication'
+    create: true
+    filter: {field: "language", value: "ru"}
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean' }
+      - { label: 'Tags',   name: 'tags', widget: 'list', default: ['talk'] }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'talk_en'
+    label: 'Talks'
+    folder: 'content/talk'
+    create: true
+    filter: {field: "language", value: "en"}
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Event', name: 'event', widget: 'string' }
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Location', name: 'location', widget: 'string' }
+      - { label: 'Publish Date', name: 'publishDate', widget: 'datetime' }
+      - { label: 'Start date', name: 'date', widget: 'datetime' }
+      - { label: 'End date', name: 'date_end', widget: 'datetime' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean' }
+      - { label: 'Tags',   name: 'tags', widget: 'list', default: ['talk'] }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
+  - name: 'talk_ru'
+    label: 'Выступления'
+    folder: 'content/talk'
+    create: true
+    filter: {field: "language", value: "ru"}
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Event', name: 'event', widget: 'string' }
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Location', name: 'location', widget: 'string' }
+      - { label: 'Publish Date', name: 'publishDate', widget: 'datetime' }
+      - { label: 'Start date', name: 'date', widget: 'datetime' }
+      - { label: 'End date', name: 'date_end', widget: 'datetime' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean' }
+      - { label: 'Tags',   name: 'tags', widget: 'list', default: ['talk'] }
+      - { label: 'Body', name: 'body', widget: 'markdown' }
