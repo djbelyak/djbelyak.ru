@@ -63,8 +63,13 @@ highlight = true
 
 +++
 
-### DOI 
-https://doi.org/10.1088/1742-6596/945/1/012031
+**Authors**: I. Belyavtsev, D. Legchikov, S. Starkov, V. Kolesov, E. Nikulin
+
+Two artificial neural networks approximating the criticality margin of the WWR-c reactor (based on model and calculated data) were created and trained. The resulting neural networks realize the correct approximation, have high accuracy, and also high speed of operation. Using the obtained artificial neural networks can be applied to accelerate the preliminary calculations of the state of the reactor.
+
+### DOI
+
+<https://doi.org/10.1088/1742-6596/945/1/012031>
 
 ### References
 
@@ -72,4 +77,3 @@ https://doi.org/10.1088/1742-6596/945/1/012031
 2. Kolesov V, O Kochnov O, Volkov Y, Ukraintsev V and Fomin F 2011 Mseecmun ey3oe. Hdepnan onepsemuKa 129-133
 3. Gorban’ A 1998 Siberian Journal of Numerical Mathematics 1 12-24
 4. Abadi M, Agarwal A, Barham P, Brevdo E, Chen Z, Citro C, Corrado G S, Davis A, Dean J, Devin M, Ghemawat S, Goodfellow I, Harp A, Irving G, Isard M, Jia Y, Jozefowicz R, Kaiser L, Kudlur M, Levenberg J, Manè D, Monga R, Moore S, Murray D, Olah C, Schuster M, Shlens J, Steiner B, Sutskever I, Talwar K, Tucker P, Vanhoucke V, Vasudevan V, Viégas F, Vinyals O, Warden P, Wattenberg M, Wicke M, Yu Y and Zheng X 2015 TensorFlow: Large-scale machine learning on heterogeneous systems software available from tensorflow.org URL http://tensorflow.org/
-

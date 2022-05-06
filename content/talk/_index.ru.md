@@ -1,5 +1,5 @@
 ---
-title: "Talks and lectures"
+title: "Выступления и лекции"
 description: "Learn how to use Congo and its features."
 
 cascade:
@@ -7,4 +7,3 @@ cascade:
   showAuthor: true
   invertPagination: true
 ---
-
