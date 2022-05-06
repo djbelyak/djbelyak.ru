@@ -63,8 +63,13 @@ highlight = true
 
 +++
 
-### DOI 
-https://doi.org/10.1088/1742-6596/945/1/012031
+**Авторы**: I. Belyavtsev, D. Legchikov, S. Starkov, V. Kolesov, E. Nikulin
+
+Two artificial neural networks approximating the criticality margin of the WWR-c reactor (based on model and calculated data) were created and trained. The resulting neural networks realize the correct approximation, have high accuracy, and also high speed of operation. Using the obtained artificial neural networks can be applied to accelerate the preliminary calculations of the state of the reactor.
+
+### DOI
+
+<https://doi.org/10.1088/1742-6596/945/1/012031>
 
 ### References
 

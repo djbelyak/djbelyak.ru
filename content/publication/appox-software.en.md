@@ -69,6 +69,16 @@ highlight = true
 
 +++
 
+**Authors**: I.P. Belyavtsev, S.O. Starkov
+
+The criticality margin of a WWR-c reactor can be calculated using a precision reactor model. However, due to the high computing time consumption (approximately eight hours of calculations per one state of the reactor core), it would be rather difficult to use this model for making operational criticality margin evaluations. This problem has determined the purpose of this work, namely, to create a software package for preliminary evaluations of the WWR-c reactor criticality margin.
+
+The research has confirmed the possibility of using an artificial neural network to approximate the criticality margin based on the reactor core state. A number of computational experiments were conducted on training the artificial neural network, using the precision model data and real reactor measured data. According to the results of these computational experiments, the maximum relative approximation error was found to be 3.13 and 3.56%, respectively. The mean computation time was 100 ms.
+
+Based on these experiments, it became possible to develop a software package for evaluating the WWR-c reactor criticality margin – REST API based web application – which has a convenient user interface for inputting the core configurations and obtaining evaluations. Besides that, it is also possible to supplement the training sample with new measurements and to finish training the artificial neural network.
+
+The criticality margin evaluation software is ready to be tested by the WWR-c reactor personnel as well as to be used as a component of the automated reactor refueling system. In future, with some modifications, this software package can be used for reactor plants of other types.
+
 ### DOI
 
 https://doi.org/10.26583/npe.2018.2.06

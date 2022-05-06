@@ -1,0 +1,55 @@
+article:
+  anchor_label: "Якорь"
+  date: "{{ .Date }}"
+  date_updated: "Обновлено: {{ .Date }}"
+  draft: "Черновик"
+  edit_title: "Редактировать"
+  reading_time:
+    one: "{{ .Count }} минута"
+    other: "{{ .Count }} минут(ы)"
+  reading_time_title: "Вермя чтения"
+  table_of_contents: "Содержание"
+  word_count:
+    one: "{{ .Count }} слово"
+    other: "{{ .Count }} слов(а)"
+
+author:
+  byline_title: "Автор"
+
+code:
+  copy: "Копировать"
+  copied: "Скопировано"
+
+error:
+  404_title: "Страница не найдена :confused:"
+  404_error: "Ошибка 404"
+  404_description: "Похоже, что страница, которую Вы запросили, не существует."
+
+footer:
+  dark_appearance: "Переключиться на темную тему"
+  light_appearance: "Переключится на светлую тему"
+  powered_by: "Сделано с помощью {{ .Hugo }} и {{ .Congo }}"
+
+list:
+  externalurl_title: "Ссылка на внешний сайт"
+  no_articles: "Нет статей для отображения."
+
+nav:
+  scroll_to_top_title: "Наверх"
+  skip_to_main: "Перейти к основному"
+
+search:
+  open_button_title: "Поиск (/)"
+  close_button_title: "Закрыть (Esc)"
+  input_placeholder: "Поиск"
+
+sharing:
+  email: "Отправить по email"
+  facebook: "Поделится на Facebook"
+  linkedin: "Поделится на LinkedIn"
+  pinterest: "Поделится на Pinterest"
+  reddit: "Поделится на Reddit"
+  twitter: "Поделиться в Twitter"
+
+shortcode:
+  recent_articles: "Новое"
