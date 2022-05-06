@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - master
-    - fix-for-ci
 
 jobs:
   build-deploy:
