@@ -7,8 +7,8 @@ rtl = false
 
 title = "Иван Белявцев"
 # logo = "img/logo.jpg"
-description = "Sr Developer technology engineer [@NVIDIA Corporation](https://www.nvidia.com/ru-ru/)"
-copyright = "&copy; 2016 - 2022 Иван Белявцев"
+description = "Sr Developer [@BIFIT](https://www.bifit.com/)"
+copyright = "&copy; 2016 - 2023 Иван Белявцев"
 
 dateFormat = "02.01.2006"
 timeFormat = "15:04"
@@ -16,8 +16,8 @@ timeFormat = "15:04"
 [author]
   name = "Иван Белявцев"
   image = "img/author.jpg"
-  headline = "Sr Developer technology engineer @NVIDIA Corporation"
-  bio = "Sr Developer technology engineer [@NVIDIA Corporation](https://www.nvidia.com/ru-ru/)"
+  headline = "Sr Developer @BIFIT"
+  bio = "Sr Developer [@BIFIT](https://www.bifit.com/)"
   links = [
     { email = "mailto:djbelyak@gmail.com" },
     { github = "https://github.com/djbelyak/" },
