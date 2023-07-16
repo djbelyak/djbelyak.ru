@@ -1,17 +1,19 @@
 languageCode = "en"
 languageName = "English"
-displayName = ":us:"
-isoCode = "en"
 weight = 2
-rtl = false
 
 title = "Ivan Belyavtsev"
-# logo = "img/logo.jpg"
-description = "Sr Developer [@BIFIT](https://www.bifit.com/)"
 copyright = "&copy; 2016 - 2023 Ivan Belyavtsev"
 
-dateFormat = "2 January 2006"
-timeFormat = "3:04 pm"
+[params]
+  isoCode = "en"
+  displayName = ":us:"
+  rtl = false
+
+  dateFormat = "2 January 2006"
+  timeFormat = "3:04 pm"
+
+  description = "Sr Developer [@BIFIT](https://www.bifit.com/)"
 
 [author]
   name = "Ivan Belyavtsev"
@@ -19,7 +21,9 @@ timeFormat = "3:04 pm"
   headline = "Sr Developer @BIFIT"
   bio = "Sr Developer [@BIFIT](https://www.bifit.com/)"
   links = [
+    { telegram = "https://t.me/ivan_palich" },
+    { comment = "https://t.me/djbelyak"},
     { email = "mailto:djbelyak@gmail.com" },
     { github = "https://github.com/djbelyak/" },
-    { telegram = "https://t.me/djbelyak" },
+    { mobile = "tel:+79533233872" },
   ]
