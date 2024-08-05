@@ -13,13 +13,13 @@ copyright = "&copy; 2016 - 2023 Иван Белявцев"
   dateFormat = "02.01.2006"
   timeFormat = "15:04"
 
-  description = "Старший разработчик [@BIFIT](https://www.bifit.com/)"
+  description = "Ведущий разработчик [@BIFIT](https://www.bifit.com/)"
 
 [author]
   name = "Иван Белявцев"
   image = "img/author.jpg"
-  headline = "Старший разработчик @BIFIT"
-  bio = "Старший разработчик [@BIFIT](https://www.bifit.com/)"
+  headline = "Ведущий разработчик @BIFIT"
+  bio = "Ведущий разработчик [@BIFIT](https://www.bifit.com/)"
   links = [
     { telegram = "https://t.me/ivan_palich" },
     { comment = "https://t.me/djbelyak"},
