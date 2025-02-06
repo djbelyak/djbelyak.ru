@@ -1,6 +1,6 @@
 ---
 event: "Course \"Computer graphics in game development (advanced)\""
-title: "Basics of rasterization"
+title: "Game loop"
 location: "Innopolis university, room 102"
 publishDate: 2025-02-06T06:30:00+03:00
 date: 2025-02-06T14:30:00+03:00

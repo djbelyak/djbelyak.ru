@@ -1,6 +1,6 @@
 ---
 event: "Course \"Computer graphics in game development (advanced)\""
-title: "Basics of rasterization"
+title: "Setup development environment"
 location: "Innopolis university, room 304"
 publishDate: 2025-02-06T07:30:00+03:00
 date: 2025-02-08T10:50:00+03:00
