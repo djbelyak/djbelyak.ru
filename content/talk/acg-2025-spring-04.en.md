@@ -1,6 +1,6 @@
 ---
 event: "Course \"Computer graphics in game development (advanced)\""
-title: "Setup development environment"
+title: "Prototyping"
 location: "Innopolis university, room 304"
 publishDate: 2025-02-26T17:00:00+03:00
 date: 2025-03-01T10:50:00+03:00
