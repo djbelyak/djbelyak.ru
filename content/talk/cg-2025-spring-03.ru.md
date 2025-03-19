@@ -1,7 +1,7 @@
 ---
 event: "Course \"Computer graphics in game development\""
 title: "Basics of rasterization"
-location: "Innopolis university, room 307"
+location: "Innopolis university, room 301"
 publishDate: 2025-03-19T16:00:00+03:00
 date: 2025-03-21T09:20:00+03:00
 date_end: 2025-03-21T17:50:00+03:00
