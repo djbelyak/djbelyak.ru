@@ -1,6 +1,6 @@
 ---
 event: "Course \"Computer graphics in game development\""
-title: "Basics of rasterization"
+title: "Basics of ray tracing"
 location: "Innopolis university, room 106"
 publishDate: 2025-02-26T17:00:00+03:00
 date: 2025-02-28T09:20:00+03:00
